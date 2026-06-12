@@ -12,7 +12,9 @@ const OFFICIAL_COMMANDS_MARKDOWN = `| \`/code-review [low|medium|high]\` | **[Sk
 | \`/loop [interval] [prompt]\` | **[Skill](/en/skills#bundled-skills).** Run a prompt repeatedly while the session stays open. |
 | \`/batch <instruction>\` | **[Skill](/en/skills#bundled-skills).** Orchestrate large-scale changes across a codebase in parallel. |
 | \`/simplify\` | **[Skill](/en/skills#bundled-skills).** Review the changed code for cleanup opportunities and apply the fixes. |
-| \`/reload-skills\` | Re-scan [skill](/en/skills) and command directories so skills added or changed on disk during the session become available without restarting. |`;
+| \`/reload-skills\` | Re-scan [skill](/en/skills) and command directories so skills added or changed on disk during the session become available without restarting. |
+| \`/run-skill-generator\` | **[Skill](/en/skills#bundled-skills).** Teach /run and /verify how to build, launch, and drive your project's app from a clean environment by writing a per-project skill. |
+| \`/fewer-permission-prompts\` | **[Skill](/en/skills#bundled-skills).** Scan your transcripts for common read-only Bash and MCP tool calls, then add a prioritized allowlist to project .claude/settings.json to reduce permission prompts. |`;
 
 async function createTempDataDir(): Promise<string> {
   const root = await mkdtemp(path.join(os.tmpdir(), 'daily-skill-pusher-'));
@@ -65,12 +67,14 @@ describe('SkillRepository', () => {
     const repository = new SkillRepository(dataDir);
     const skills = await repository.getActive();
 
-    expect(skills).toHaveLength(6);
+    expect(skills).toHaveLength(8);
     const verify = skills.find((skill) => skill.name === 'verify');
     const loop = skills.find((skill) => skill.name === 'loop');
     const batch = skills.find((skill) => skill.name === 'batch');
     const simplify = skills.find((skill) => skill.name === 'simplify');
     const reloadSkills = skills.find((skill) => skill.name === 'reload-skills');
+    const runSkillGenerator = skills.find((skill) => skill.name === 'run-skill-generator');
+    const fewerPermissionPrompts = skills.find((skill) => skill.name === 'fewer-permission-prompts');
 
     expect(verify?.title).toBe('效果验证助手');
     expect(verify?.links[0]?.url).toBe(COMMANDS_DOC_URL);
@@ -87,5 +91,9 @@ describe('SkillRepository', () => {
     expect(reloadSkills?.example).toBe('/reload-skills');
     expect(reloadSkills?.whyRecommended).toContain('分发流程');
     expect(reloadSkills?.scenes).toContain('刚新增或修改了本地 skill，不想重启 Claude Code 会话');
+    expect(runSkillGenerator?.example).toBe('/run-skill-generator');
+    expect(runSkillGenerator?.whyRecommended).toContain('运行流程');
+    expect(fewerPermissionPrompts?.example).toBe('/fewer-permission-prompts');
+    expect(fewerPermissionPrompts?.whyRecommended).toContain('权限确认');
   });
 });

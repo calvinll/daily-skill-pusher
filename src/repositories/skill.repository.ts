@@ -133,6 +133,28 @@ const SKILL_PRESETS: Record<string, SkillPreset> = {
     whyRecommended: '它能让 skill 的安装、调试和分发流程顺畅很多，特别适合正在推广自定义 skill 的团队。',
     relatedSkills: ['loop', 'claude-api'],
   },
+  'run-skill-generator': {
+    category: ['official', 'bundled-skill', 'workflow-setup'],
+    tags: ['run-skill-generator', 'run', 'verify', 'setup'],
+    difficulty: 'medium',
+    recommendScore: 89,
+    universalityScore: 84,
+    scenes: ['项目启动方式比较复杂，想让 /run 和 /verify 更稳定', '希望把项目运行方法沉淀成可复用 skill'],
+    example: '/run-skill-generator',
+    whyRecommended: '它适合把项目运行流程沉淀成标准 skill，后面再用 /run 和 /verify 会稳定很多。',
+    relatedSkills: ['run', 'verify'],
+  },
+  'fewer-permission-prompts': {
+    category: ['official', 'bundled-skill', 'workflow-setup'],
+    tags: ['permissions', 'settings', 'productivity'],
+    difficulty: 'easy',
+    recommendScore: 87,
+    universalityScore: 86,
+    scenes: ['频繁被只读命令权限弹窗打断', '想给团队项目补一版更顺手的 Claude 权限配置'],
+    example: '/fewer-permission-prompts',
+    whyRecommended: '如果你已经知道常用读操作都很安全，这个 skill 能明显减少权限确认带来的中断。',
+    relatedSkills: ['reload-skills', 'claude-api'],
+  },
 };
 
 function genericScenes(name: string): string[] {
@@ -143,7 +165,7 @@ function genericScenes(name: string): string[] {
 }
 
 function defaultRecommendScore(name: string): number {
-  const highValue = new Set(['code-review', 'verify', 'run', 'loop', 'claude-api', 'batch', 'simplify', 'reload-skills']);
+  const highValue = new Set(['code-review', 'verify', 'run', 'loop', 'claude-api', 'batch', 'simplify', 'reload-skills', 'run-skill-generator', 'fewer-permission-prompts']);
   return highValue.has(name) ? 90 : 80;
 }
 

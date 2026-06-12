@@ -5,6 +5,8 @@ import { fetchOfficialClaudeCodeSkills } from '../../src/sources/claude-code-doc
 const OFFICIAL_COMMANDS_MARKDOWN = `| \`/batch <instruction>\` | **[Skill](/en/skills#bundled-skills).** Orchestrate large-scale changes across a codebase in parallel. |
 | \`/code-review [low|medium|high]\` | **[Skill](/en/skills#bundled-skills).** Review the current diff for correctness bugs and cleanups. |
 | \`/reload-skills\` | Re-scan [skill](/en/skills) and command directories so skills added or changed on disk during the session become available without restarting. |
+| \`/run-skill-generator\` | **[Skill](/en/skills#bundled-skills).** Teach /run and /verify how to build, launch, and drive your project's app from a clean environment by writing a per-project skill. |
+| \`/fewer-permission-prompts\` | **[Skill](/en/skills#bundled-skills).** Scan your transcripts for common read-only Bash and MCP tool calls, then add a prioritized allowlist to project .claude/settings.json to reduce permission prompts. |
 | \`/doctor\` | Diagnose install issues. |`;
 
 afterEach(() => {
@@ -23,7 +25,7 @@ describe('fetchOfficialClaudeCodeSkills', () => {
 
     const skills = await fetchOfficialClaudeCodeSkills();
 
-    expect(skills.map((skill) => skill.name)).toEqual(['batch', 'code-review', 'reload-skills']);
+    expect(skills.map((skill) => skill.name)).toEqual(['batch', 'code-review', 'reload-skills', 'run-skill-generator', 'fewer-permission-prompts']);
     expect(skills[0]?.docsUrl).toContain('/commands.md');
   });
 });
