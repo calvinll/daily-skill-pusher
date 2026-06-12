@@ -87,7 +87,7 @@ pnpm push
 npm run push
 ```
 
-> 当前默认 `FEISHU_ENABLED=false`，所以真实机器人推送已暂停；执行时会直接提示已禁用，不会发消息。
+> 本地默认仍然是 `FEISHU_ENABLED=false`，所以本地执行不会自动发消息；GitHub Actions 可以单独开启真实推送。
 
 ### 干跑，不实际发送
 
@@ -113,18 +113,18 @@ pnpm validate
 
 ## 机器人推送状态
 
-目前机器人推送已暂停，默认通过：
+当前采用“本地保守、云端启用”的策略：
 
 ```env
 FEISHU_ENABLED=false
 ```
 
-这意味着：
-- `npm run push` 不会真的发飞书消息
-- GitHub Actions 也不会进行真实机器人推送
+这表示：
+- 本地默认不会真的发飞书消息
 - `preview`、内容生成、选择逻辑仍然可以正常使用
+- GitHub Actions 工作流里会单独设置 `FEISHU_ENABLED=true`，用于每天自动推送
 
-如果以后要恢复，只需要把 `FEISHU_ENABLED` 改回 `true`。
+如果你希望本地也默认发消息，再把 `.env` 里的 `FEISHU_ENABLED` 改回 `true` 即可。
 
 ## 当前选择逻辑
 
@@ -139,13 +139,18 @@ FEISHU_ENABLED=false
 
 - `.github/workflows/daily-push.yml`
 
-但当前已通过 `FEISHU_ENABLED=false` 暂停真实机器人推送，所以 workflow 暂时不会再对飞书发消息。
+GitHub Actions 工作流现在会单独设置 `FEISHU_ENABLED=true`，因此会按计划进行真实机器人推送；本地仍然保持默认关闭。
 
-如果以后要恢复自动推送，再把该变量改回 `true` 即可。
+你需要在 GitHub 仓库里正确配置这些 Secrets / Variables：
+- `FEISHU_WEBHOOK_URL`
+- `FEISHU_BOT_SECRET`（如果启用了签名校验）
+- `FEISHU_REQUIRED_KEYWORD`（如果启用了关键词校验）
+- `APP_TIMEZONE`（建议填 `Asia/Shanghai`）
 
 ## 注意
 
-如果官方来源页面结构未来发生变化，解析逻辑也需要一起更新。
+- 如果官方来源页面结构未来发生变化，解析逻辑也需要一起更新。
+- GitHub Actions 的 cron 使用 UTC，当前 `5 1 * * *` 对应北京时间 09:05。
 
 ## 后续扩展
 

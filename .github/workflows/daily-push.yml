@@ -16,7 +16,7 @@ jobs:
       APP_ENV: production
       APP_TIMEZONE: ${{ vars.APP_TIMEZONE || 'Asia/Shanghai' }}
       CRON_EXPRESSION: 5 9 * * *
-      FEISHU_ENABLED: false
+      FEISHU_ENABLED: true
       FEISHU_WEBHOOK_URL: ${{ secrets.FEISHU_WEBHOOK_URL }}
       FEISHU_BOT_SECRET: ${{ secrets.FEISHU_BOT_SECRET }}
       FEISHU_REQUIRED_KEYWORD: ${{ secrets.FEISHU_REQUIRED_KEYWORD }}
