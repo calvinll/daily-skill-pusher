@@ -89,6 +89,50 @@ const SKILL_PRESETS: Record<string, SkillPreset> = {
     whyRecommended: '当你要查 Claude API、SDK、流式输出或工具调用时，这类官方参考 skill 非常省时间。',
     relatedSkills: [],
   },
+  batch: {
+    category: ['official', 'bundled-skill', 'orchestration'],
+    tags: ['batch', 'parallel', 'multi-agent'],
+    difficulty: 'hard',
+    recommendScore: 91,
+    universalityScore: 84,
+    scenes: ['想把一个大改动拆成多个独立小任务并行推进', '需要跨代码库多处修改，单线程做太慢'],
+    example: '/batch 把整个项目里的旧接口调用迁移到新 SDK',
+    whyRecommended: '适合大范围改动和并行处理任务，能把原本需要人工拆分的工作交给 Claude 执行。',
+    relatedSkills: ['code-review', 'loop'],
+  },
+  simplify: {
+    category: ['official', 'bundled-skill', 'cleanup'],
+    tags: ['simplify', 'cleanup', 'refactor'],
+    difficulty: 'easy',
+    recommendScore: 89,
+    universalityScore: 88,
+    scenes: ['改完代码后想顺手清理冗余实现', '希望把改动整理得更简洁、更顺手维护'],
+    example: '/simplify',
+    whyRecommended: '它不强调找 bug，而是专注于让代码更干净、更顺手，是提交前很好用的一步。',
+    relatedSkills: ['code-review', 'verify'],
+  },
+  debug: {
+    category: ['official', 'bundled-skill', 'troubleshooting'],
+    tags: ['debug', 'logs', 'diagnostics'],
+    difficulty: 'medium',
+    recommendScore: 86,
+    universalityScore: 82,
+    scenes: ['Claude Code 自己行为异常，想快速排查原因', '需要读取调试日志来定位 CLI 或工具调用问题'],
+    example: '/debug',
+    whyRecommended: '当问题不在业务代码而在 Claude Code 本身时，这类诊断 skill 很有价值。',
+    relatedSkills: ['code-review'],
+  },
+  'reload-skills': {
+    category: ['official', 'skill-workflow', 'refresh'],
+    tags: ['reload-skills', 'skills', 'commands'],
+    difficulty: 'easy',
+    recommendScore: 91,
+    universalityScore: 85,
+    scenes: ['刚新增或修改了本地 skill，不想重启 Claude Code 会话', '团队在试装自定义 skills，希望马上验证是否生效'],
+    example: '/reload-skills',
+    whyRecommended: '它能让 skill 的安装、调试和分发流程顺畅很多，特别适合正在推广自定义 skill 的团队。',
+    relatedSkills: ['loop', 'claude-api'],
+  },
 };
 
 function genericScenes(name: string): string[] {
@@ -99,7 +143,7 @@ function genericScenes(name: string): string[] {
 }
 
 function defaultRecommendScore(name: string): number {
-  const highValue = new Set(['code-review', 'verify', 'run', 'loop', 'claude-api']);
+  const highValue = new Set(['code-review', 'verify', 'run', 'loop', 'claude-api', 'batch', 'simplify', 'reload-skills']);
   return highValue.has(name) ? 90 : 80;
 }
 

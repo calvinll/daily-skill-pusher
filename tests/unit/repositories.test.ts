@@ -9,7 +9,10 @@ import { COMMANDS_DOC_URL } from '../../src/sources/claude-code-docs.source.js';
 
 const OFFICIAL_COMMANDS_MARKDOWN = `| \`/code-review [low|medium|high]\` | **[Skill](/en/skills#bundled-skills).** Review the current diff for correctness bugs and cleanups. |
 | \`/verify\` | **[Skill](/en/skills#bundled-skills).** Confirm a code change does what it should by building your project's app and observing the result. |
-| \`/loop [interval] [prompt]\` | **[Skill](/en/skills#bundled-skills).** Run a prompt repeatedly while the session stays open. |`;
+| \`/loop [interval] [prompt]\` | **[Skill](/en/skills#bundled-skills).** Run a prompt repeatedly while the session stays open. |
+| \`/batch <instruction>\` | **[Skill](/en/skills#bundled-skills).** Orchestrate large-scale changes across a codebase in parallel. |
+| \`/simplify\` | **[Skill](/en/skills#bundled-skills).** Review the changed code for cleanup opportunities and apply the fixes. |
+| \`/reload-skills\` | Re-scan [skill](/en/skills) and command directories so skills added or changed on disk during the session become available without restarting. |`;
 
 async function createTempDataDir(): Promise<string> {
   const root = await mkdtemp(path.join(os.tmpdir(), 'daily-skill-pusher-'));
@@ -62,9 +65,12 @@ describe('SkillRepository', () => {
     const repository = new SkillRepository(dataDir);
     const skills = await repository.getActive();
 
-    expect(skills).toHaveLength(3);
+    expect(skills).toHaveLength(6);
     const verify = skills.find((skill) => skill.name === 'verify');
     const loop = skills.find((skill) => skill.name === 'loop');
+    const batch = skills.find((skill) => skill.name === 'batch');
+    const simplify = skills.find((skill) => skill.name === 'simplify');
+    const reloadSkills = skills.find((skill) => skill.name === 'reload-skills');
 
     expect(verify?.title).toBe('效果验证助手');
     expect(verify?.links[0]?.url).toBe(COMMANDS_DOC_URL);
@@ -74,5 +80,12 @@ describe('SkillRepository', () => {
     expect(loop?.example).toBe('/loop 5m check if the deploy finished');
     expect(loop?.whyRecommended).toContain('持续盯着');
     expect(loop?.scenes).toContain('想定时检查某件事有没有变化');
+
+    expect(batch?.example).toContain('/batch');
+    expect(batch?.whyRecommended).toContain('并行');
+    expect(simplify?.whyRecommended).toContain('更干净');
+    expect(reloadSkills?.example).toBe('/reload-skills');
+    expect(reloadSkills?.whyRecommended).toContain('分发流程');
+    expect(reloadSkills?.scenes).toContain('刚新增或修改了本地 skill，不想重启 Claude Code 会话');
   });
 });

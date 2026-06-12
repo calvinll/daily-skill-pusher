@@ -29,7 +29,9 @@ function parseSkillRow(line: string): OfficialSkillSeed | null {
     return null;
   }
 
-  if (!descriptionCell.includes('[Skill]')) {
+  const isSkillRow = descriptionCell.includes('[Skill]');
+  const isSpecialReloadSkills = commandSpec.startsWith('/reload-skills');
+  if (!isSkillRow && !isSpecialReloadSkills) {
     return null;
   }
 

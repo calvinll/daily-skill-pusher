@@ -74,7 +74,7 @@ export function selectDailySkill(
   }
 
   const scored = finalCandidates
-    .map((skill) => scoreSkill(skill, records, now))
+    .map((skill) => scoreSkill(skill, skills, records, now))
     .sort((left, right) => right.score - left.score);
 
   return scored[0]!;
