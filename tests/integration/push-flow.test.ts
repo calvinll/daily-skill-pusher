@@ -7,6 +7,8 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import type { AppConfig } from '../../src/types/app-config.js';
 import { runDailyPush } from '../../src/services/daily-runner.service.js';
 
+const OFFICIAL_COMMANDS_MARKDOWN = `| \`/verify\` | **[Skill](/en/skills#bundled-skills).** Confirm a code change does what it should by building your project's app and observing the result. |`;
+
 function createConfig(dataDir: string): AppConfig {
   return {
     app: {
@@ -39,7 +41,7 @@ afterEach(() => {
 });
 
 describe('runDailyPush', () => {
-  it('supports dry-run without writing history', async () => {
+  it('supports dry-run using official source data without writing history', async () => {
     const dataDir = await mkdtemp(path.join(os.tmpdir(), 'daily-skill-pusher-'));
     await writeFile(
       path.join(dataDir, 'skills.json'),
@@ -56,17 +58,21 @@ describe('runDailyPush', () => {
           scenes: ['a', 'b'],
           example: '/verify',
           whyRecommended: 'good',
-          links: [{ label: '技能文档', url: 'https://github.com/calvinll/daily-skill-pusher/blob/main/docs/skills/verify.md' }],
           relatedSkills: [],
-          status: 'active',
-          pushCount: 0,
-          lastPushedAt: null
+          status: 'active'
         }
       ]),
     );
     await writeFile(path.join(dataDir, 'push-history.json'), '[]');
 
-    const fetchSpy = vi.spyOn(globalThis, 'fetch');
+    vi.stubGlobal(
+      'fetch',
+      vi.fn().mockResolvedValue({
+        ok: true,
+        text: async () => OFFICIAL_COMMANDS_MARKDOWN,
+      }),
+    );
+
     const result = await runDailyPush(createConfig(dataDir), {
       dryRun: true,
       now: new Date('2026-06-11T09:00:00.000Z'),
@@ -77,35 +83,12 @@ describe('runDailyPush', () => {
     expect(result.selectedSkill).toBe('verify');
     expect(result.pushResult.success).toBe(true);
     expect(result.content).toContain('效果验证助手');
-    expect(fetchSpy).not.toHaveBeenCalled();
     expect(JSON.parse(historyRaw)).toEqual([]);
   });
 
   it('skips webhook sending when feishu is disabled', async () => {
     const dataDir = await mkdtemp(path.join(os.tmpdir(), 'daily-skill-pusher-'));
-    await writeFile(
-      path.join(dataDir, 'skills.json'),
-      JSON.stringify([
-        {
-          name: 'verify',
-          title: '效果验证助手',
-          description: 'desc',
-          category: ['quality'],
-          tags: ['verify'],
-          difficulty: 'easy',
-          recommendScore: 90,
-          universalityScore: 90,
-          scenes: ['a', 'b'],
-          example: '/verify',
-          whyRecommended: 'good',
-          links: [{ label: '技能文档', url: 'https://github.com/calvinll/daily-skill-pusher/blob/main/docs/skills/verify.md' }],
-          relatedSkills: [],
-          status: 'active',
-          pushCount: 0,
-          lastPushedAt: null
-        }
-      ]),
-    );
+    await writeFile(path.join(dataDir, 'skills.json'), '[]');
     await writeFile(path.join(dataDir, 'push-history.json'), '[]');
 
     const fetchMock = vi.fn();

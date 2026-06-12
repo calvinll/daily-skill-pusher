@@ -14,7 +14,6 @@ export async function validateCommand(config: AppConfig): Promise<void> {
   }
 
   await Promise.all([
-    access(path.join(config.app.dataDir, 'skills.json')),
     access(path.join(config.app.dataDir, 'push-history.json')),
   ]);
 

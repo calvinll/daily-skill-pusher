@@ -2,11 +2,13 @@ import { mkdir, mkdtemp, writeFile } from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
 
-import { describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 
-import type { AppConfig } from '../../src/types/app-config.js';
-import { HistoryRepository } from '../../src/repositories/history.repository.js';
 import { SkillRepository } from '../../src/repositories/skill.repository.js';
+import { COMMANDS_DOC_URL } from '../../src/sources/claude-code-docs.source.js';
+
+const OFFICIAL_COMMANDS_MARKDOWN = `| \`/code-review [low|medium|high]\` | **[Skill](/en/skills#bundled-skills).** Review the current diff for correctness bugs and cleanups. |
+| \`/verify\` | **[Skill](/en/skills#bundled-skills).** Confirm a code change does what it should by building your project's app and observing the result. |`;
 
 async function createTempDataDir(): Promise<string> {
   const root = await mkdtemp(path.join(os.tmpdir(), 'daily-skill-pusher-'));
@@ -14,33 +16,12 @@ async function createTempDataDir(): Promise<string> {
   return root;
 }
 
-function createConfig(dataDir: string): AppConfig {
-  return {
-    app: {
-      env: 'test',
-      timezone: 'Asia/Shanghai',
-      dataDir,
-    },
-    scheduler: {
-      enabled: true,
-      cronExpression: '5 9 * * *',
-    },
-    selection: {
-      daysToAvoidRepeat: 14,
-      avoidSameCategoryDays: 2,
-      dailyCount: 1,
-    },
-    channels: {
-      feishu: {
-        enabled: true,
-        webhookUrl: 'https://open.feishu.cn/open-apis/bot/v2/hook/test',
-      },
-    },
-  };
-}
+afterEach(() => {
+  vi.restoreAllMocks();
+});
 
-describe('repositories', () => {
-  it('loads skill and history files', async () => {
+describe('SkillRepository', () => {
+  it('merges official skill source with local enrichment', async () => {
     const dataDir = await createTempDataDir();
     await writeFile(
       path.join(dataDir, 'skills.json'),
@@ -48,34 +29,36 @@ describe('repositories', () => {
         {
           name: 'verify',
           title: '效果验证助手',
-          description: 'desc',
-          category: ['quality'],
-          tags: ['verify'],
+          description: '帮助确认修改后的功能是否真的按预期工作。',
+          category: ['quality', 'verification'],
+          tags: ['verification'],
           difficulty: 'easy',
           recommendScore: 90,
           universalityScore: 90,
-          scenes: ['a', 'b'],
+          scenes: ['改完功能后做一次手动验证', '提交前确认 bug 已修复'],
           example: '/verify',
-          whyRecommended: 'good',
-          links: [{ label: '技能文档', url: 'https://github.com/calvinll/daily-skill-pusher/blob/main/docs/skills/verify.md' }],
-          relatedSkills: [],
-          status: 'active',
-          pushCount: 0,
-          lastPushedAt: null
+          whyRecommended: '适合和 review 搭配。',
+          relatedSkills: ['code-review'],
+          status: 'active'
         }
       ]),
     );
-    await writeFile(path.join(dataDir, 'push-history.json'), '[]');
 
-    const skillRepository = new SkillRepository(dataDir);
-    const historyRepository = new HistoryRepository(createConfig(dataDir));
+    vi.stubGlobal(
+      'fetch',
+      vi.fn().mockResolvedValue({
+        ok: true,
+        text: async () => OFFICIAL_COMMANDS_MARKDOWN,
+      }),
+    );
 
-    const [skills, history] = await Promise.all([
-      skillRepository.getActive(),
-      historyRepository.getAll(),
-    ]);
+    const repository = new SkillRepository(dataDir);
+    const skills = await repository.getActive();
 
-    expect(skills).toHaveLength(1);
-    expect(history).toEqual([]);
+    expect(skills).toHaveLength(2);
+    const verify = skills.find((skill) => skill.name === 'verify');
+    expect(verify?.title).toBe('效果验证助手');
+    expect(verify?.links[0]?.url).toBe(COMMANDS_DOC_URL);
+    expect(verify?.example).toBe('/verify');
   });
 });

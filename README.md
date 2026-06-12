@@ -4,7 +4,7 @@
 
 ## 功能
 
-- 从本地 `skills.json` 中读取技能数据
+- 从 Claude Code 官方文档来源发现技能/命令
 - 按规则选择今日精选 skill
 - 生成统一格式的推荐文案
 - 推送到飞书机器人 webhook
@@ -45,8 +45,17 @@ cp .env.example .env
 
 ## 数据文件
 
-- `data/skills.json`：skills 数据源
+- `data/skills.json`：本地补充信息/推荐权重，不是官方 source of truth
 - `data/push-history.json`：推送历史
+
+## 官方来源
+
+当前实现优先从这些官方来源发现 skills：
+
+- `https://code.claude.com/docs/en/commands.md`
+- `https://code.claude.com/docs/en/skills.md`
+
+项目会把官方来源解析成内部 skill 数据，再叠加本地的补充字段（例如推荐理由、示例、场景）。
 
 ## 命令
 
@@ -100,6 +109,8 @@ pnpm schedule
 pnpm validate
 ```
 
+`validate` 会检查本地配置，并尝试从 Claude Code 官方来源拉取技能列表。
+
 ## 机器人推送状态
 
 目前机器人推送已暂停，默认通过：
@@ -115,6 +126,13 @@ FEISHU_ENABLED=false
 
 如果以后要恢复，只需要把 `FEISHU_ENABLED` 改回 `true`。
 
+## 当前选择逻辑
+
+当前不是“从本地手工维护的 skill 列表里挑”，而是：
+1. 先从 Claude Code 官方文档来源发现可用 skills
+2. 再叠加本地补充信息
+3. 最后按推荐规则做精选
+
 ## GitHub Actions 每天自动推送
 
 项目仍保留工作流文件：
@@ -124,6 +142,10 @@ FEISHU_ENABLED=false
 但当前已通过 `FEISHU_ENABLED=false` 暂停真实机器人推送，所以 workflow 暂时不会再对飞书发消息。
 
 如果以后要恢复自动推送，再把该变量改回 `true` 即可。
+
+## 注意
+
+如果官方来源页面结构未来发生变化，解析逻辑也需要一起更新。
 
 ## 后续扩展
 
