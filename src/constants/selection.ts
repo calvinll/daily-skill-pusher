@@ -1,0 +1,3 @@
+export const DEFAULT_FRESHNESS_SCORE = 60;
+export const MAX_FRESHNESS_SCORE = 100;
+export const REPEAT_WINDOW_FALLBACK_DIVISOR = 2;

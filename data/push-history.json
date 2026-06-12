@@ -1,0 +1,29 @@
+[
+  {
+    "id": "push_1781182577061_1726e8d2",
+    "date": "2026-06-11",
+    "skillName": "code-review",
+    "channel": "feishu",
+    "content": "🧠 今日精选 Skill：代码审查助手\n\n适合场景：\n- 提交代码前快速自查\n- 定位改动中的明显 bug\n- 寻找可以简化的实现\n\n推荐用法：\n/code-review high\n\n为什么推荐：\n高频、通用、见效快，适合养成提交前自检习惯。\n\n关联技能：\nsimplify / verify",
+    "status": "success",
+    "createdAt": "2026-06-11T12:56:16.181Z"
+  },
+  {
+    "id": "push_1781183866110_d90ce22e",
+    "date": "2026-06-11",
+    "skillName": "vitest",
+    "channel": "feishu",
+    "content": "🧠 今日精选 Skill：Vitest 测试助手\n\n适合场景：\n- 给工具函数补单测\n- 排查 Vitest 用例失败\n- 快速生成测试文件模板\n\n推荐用法：\n/vitest 为 src/utils/date.ts 补充边界条件测试\n\n为什么推荐：\n适合前端项目，尤其是 Vue/Vite 场景，学习成本低、收益高。\n\n关联技能：\nvite / verify",
+    "status": "success",
+    "createdAt": "2026-06-11T13:17:45.305Z"
+  },
+  {
+    "id": "push_1781185108295_4b512ee2",
+    "date": "2026-06-11",
+    "skillName": "verify",
+    "channel": "feishu",
+    "content": "🧠 今日精选 Skill：效果验证助手\n\n适合场景：\n- 改完功能后做一次手动验证\n- 提交前确认 bug 已修复\n- 需要验证 PR 的真实效果\n\n推荐用法：\n/verify\n\n为什么推荐：\n适合和 review、test 搭配，防止“代码改了但没生效”。\n\n使用入口：\n- 技能文档: https://github.com/calvinll/daily-skill-pusher/blob/main/docs/skills/verify.md\n\n关联技能：\ncode-review / run",
+    "status": "success",
+    "createdAt": "2026-06-11T13:38:27.161Z"
+  }
+]

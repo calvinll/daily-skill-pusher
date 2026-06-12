@@ -1,0 +1,83 @@
+[
+  {
+    "name": "code-review",
+    "title": "代码审查助手",
+    "description": "帮助检查当前代码改动中的风险点和优化空间。",
+    "category": ["quality", "review"],
+    "tags": ["review", "quality", "pre-commit"],
+    "difficulty": "easy",
+    "recommendScore": 92,
+    "universalityScore": 95,
+    "scenes": [
+      "提交代码前快速自查",
+      "定位改动中的明显 bug",
+      "寻找可以简化的实现"
+    ],
+    "example": "/code-review high",
+    "whyRecommended": "高频、通用、见效快，适合养成提交前自检习惯。",
+    "links": [
+      {
+        "label": "技能文档",
+        "url": "https://github.com/calvinll/daily-skill-pusher/blob/main/docs/skills/code-review.md"
+      }
+    ],
+    "relatedSkills": ["simplify", "verify"],
+    "status": "active",
+    "pushCount": 0,
+    "lastPushedAt": null
+  },
+  {
+    "name": "verify",
+    "title": "效果验证助手",
+    "description": "帮助确认修改后的功能是否真的按预期工作。",
+    "category": ["quality", "verification"],
+    "tags": ["verification", "manual-test"],
+    "difficulty": "easy",
+    "recommendScore": 90,
+    "universalityScore": 90,
+    "scenes": [
+      "改完功能后做一次手动验证",
+      "提交前确认 bug 已修复",
+      "需要验证 PR 的真实效果"
+    ],
+    "example": "/verify",
+    "whyRecommended": "适合和 review、test 搭配，防止“代码改了但没生效”。",
+    "links": [
+      {
+        "label": "技能文档",
+        "url": "https://github.com/calvinll/daily-skill-pusher/blob/main/docs/skills/verify.md"
+      }
+    ],
+    "relatedSkills": ["code-review", "run"],
+    "status": "active",
+    "pushCount": 0,
+    "lastPushedAt": null
+  },
+  {
+    "name": "vitest",
+    "title": "Vitest 测试助手",
+    "description": "帮助补充测试、定位测试失败原因、生成测试样板。",
+    "category": ["testing", "frontend"],
+    "tags": ["vitest", "unit-test"],
+    "difficulty": "medium",
+    "recommendScore": 88,
+    "universalityScore": 82,
+    "scenes": [
+      "给工具函数补单测",
+      "排查 Vitest 用例失败",
+      "快速生成测试文件模板"
+    ],
+    "example": "/vitest 为 src/utils/date.ts 补充边界条件测试",
+    "whyRecommended": "适合前端项目，尤其是 Vue/Vite 场景，学习成本低、收益高。",
+    "links": [
+      {
+        "label": "技能文档",
+        "url": "https://github.com/calvinll/daily-skill-pusher/blob/main/docs/skills/vitest.md"
+      }
+    ],
+    "relatedSkills": ["vite", "verify"],
+    "status": "active",
+    "pushCount": 0,
+    "lastPushedAt": null
+  }
+]

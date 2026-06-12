@@ -1,0 +1,31 @@
+{
+  "name": "daily-skill-pusher",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Daily curated skill push tool with Feishu delivery",
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "dev": "tsx src/index.ts",
+    "preview": "tsx src/index.ts preview",
+    "push": "tsx src/index.ts push",
+    "schedule": "tsx src/index.ts schedule",
+    "validate": "tsx src/index.ts validate",
+    "build": "tsc -p tsconfig.json",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "commander": "^12.1.0",
+    "dotenv": "^16.4.7",
+    "node-cron": "^4.2.1",
+    "zod": "^3.25.76"
+  },
+  "devDependencies": {
+    "@types/node": "^22.15.30",
+    "tsx": "^4.20.3",
+    "typescript": "^5.8.3",
+    "vitest": "^2.1.9"
+  }
+}
