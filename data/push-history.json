@@ -34,5 +34,14 @@
     "content": "🧠 今日精选 Skill：/loop\n\n适合场景：\n- 想定时检查某件事有没有变化\n- 想持续跟进任务进展，不想反复手动催\n- 想把轮询、观察、提醒这类动作交给 Claude\n\n推荐用法：\n/loop 5m check if the deploy finished\n\n为什么推荐：\n很适合“要持续盯着，但不值得你手动反复问”的任务，能把重复观察自动化。\n\n使用入口：\n- Claude Code官方文档: https://code.claude.com/docs/en/commands.md\n\n关联技能：\nrun / verify",
     "status": "success",
     "createdAt": "2026-06-12T08:54:43.545Z"
+  },
+  {
+    "id": "push_1781329420178_d411f5b1",
+    "date": "2026-06-13",
+    "skillName": "run",
+    "channel": "feishu",
+    "content": "🧠 今日精选 Skill：/run\n\n适合场景：\n- 想把项目直接跑起来看实际效果\n- 不想只靠看代码或测试判断改动是否生效\n\n推荐用法：\n/run\n\n为什么推荐：\n适合把“写完代码”推进到“真实跑起来看结果”这一步。\n\n使用入口：\n- Claude Code官方文档: https://code.claude.com/docs/en/commands.md\n\n关联技能：\nverify",
+    "status": "success",
+    "createdAt": "2026-06-13T05:43:37.751Z"
   }
 ]
