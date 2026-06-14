@@ -43,5 +43,14 @@
     "content": "🧠 今日精选 Skill：/run\n\n适合场景：\n- 想把项目直接跑起来看实际效果\n- 不想只靠看代码或测试判断改动是否生效\n\n推荐用法：\n/run\n\n为什么推荐：\n适合把“写完代码”推进到“真实跑起来看结果”这一步。\n\n使用入口：\n- Claude Code官方文档: https://code.claude.com/docs/en/commands.md\n\n关联技能：\nverify",
     "status": "success",
     "createdAt": "2026-06-13T05:43:37.751Z"
+  },
+  {
+    "id": "push_1781416927109_f2e84f62",
+    "date": "2026-06-14",
+    "skillName": "reload-skills",
+    "channel": "feishu",
+    "content": "🧠 今日精选 Skill：/reload-skills\n\n适合场景：\n- 刚新增或修改了本地 skill，不想重启 Claude Code 会话\n- 团队在试装自定义 skills，希望马上验证是否生效\n\n推荐用法：\n/reload-skills\n\n为什么推荐：\n它能让 skill 的安装、调试和分发流程顺畅很多，特别适合正在推广自定义 skill 的团队。\n\n使用入口：\n- Claude Code官方文档: https://code.claude.com/docs/en/commands.md\n\n关联技能：\nloop / claude-api",
+    "status": "success",
+    "createdAt": "2026-06-14T06:02:05.419Z"
   }
 ]
