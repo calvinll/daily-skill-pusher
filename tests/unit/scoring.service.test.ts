@@ -19,6 +19,10 @@ const baseSkill: Skill = {
   links: [{ label: '技能文档', url: 'https://github.com/calvinll/daily-skill-pusher/blob/main/docs/skills/code-review.md' }],
   relatedSkills: ['verify'],
   themes: ['high-frequency-productivity', 'official-high-value'],
+  officialSignals: [],
+  isOfficialRecent: false,
+  isOfficialNoteworthy: false,
+  officialSignalScore: 0,
   status: 'active',
   pushCount: 0,
   lastPushedAt: null,
@@ -74,5 +78,36 @@ describe('scoreSkill', () => {
     const hardResult = scoreSkill(hardDebug, [baseSkill, verify, hardDebug], records, new Date('2026-06-11T09:00:00.000Z'));
 
     expect(relatedResult.score).toBeGreaterThan(hardResult.score);
+  });
+
+  it('boosts official recent and noteworthy signals', () => {
+    const recentSkill: Skill = {
+      ...baseSkill,
+      name: 'reload-skills',
+      title: '/reload-skills',
+      officialSignals: [
+        { source: 'changelog', url: 'https://code.claude.com/docs/en/changelog.md', signal: 'recent', weight: 4 },
+        { source: 'whats-new', url: 'https://code.claude.com/docs/en/whats-new/2026-w22.md', signal: 'noteworthy', weight: 6 },
+      ],
+      isOfficialRecent: true,
+      isOfficialNoteworthy: true,
+      officialSignalScore: 10,
+      relatedSkills: [],
+    };
+    const plainSkill: Skill = {
+      ...baseSkill,
+      name: 'plain-skill',
+      title: '/plain-skill',
+      officialSignals: [],
+      isOfficialRecent: false,
+      isOfficialNoteworthy: false,
+      officialSignalScore: 0,
+      relatedSkills: [],
+    };
+
+    const recentResult = scoreSkill(recentSkill, [recentSkill, plainSkill], [], new Date('2026-06-11T09:00:00.000Z'));
+    const plainResult = scoreSkill(plainSkill, [recentSkill, plainSkill], [], new Date('2026-06-11T09:00:00.000Z'));
+
+    expect(recentResult.score).toBeGreaterThan(plainResult.score);
   });
 });

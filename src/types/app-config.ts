@@ -24,6 +24,7 @@ export type AppConfig = {
     env: 'development' | 'production' | 'test';
     timezone: string;
     dataDir: string;
+    webPort: number;
   };
   scheduler: {
     enabled: boolean;

@@ -9,6 +9,7 @@ export function createAppConfig(env: EnvConfig, cwd: string = process.cwd()): Ap
       env: env.APP_ENV,
       timezone: env.APP_TIMEZONE,
       dataDir: path.resolve(cwd, env.DATA_DIR),
+      webPort: env.WEB_PORT,
     },
     scheduler: {
       enabled: env.SCHEDULER_ENABLED,

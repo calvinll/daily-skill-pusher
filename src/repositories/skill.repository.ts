@@ -14,6 +14,7 @@ type SkillSeed = {
   title: string;
   description: string;
   docsUrl: string;
+  officialSignals: Skill['officialSignals'];
 };
 
 type SkillPreset = {
@@ -200,6 +201,16 @@ function mergeLinks(seed: SkillSeed, enrichment?: SkillEnrichment) {
   return [officialLink, ...extras];
 }
 
+function buildOfficialSignalMeta(seed: SkillSeed) {
+  const officialSignalScore = seed.officialSignals.reduce((sum, signal) => sum + signal.weight, 0);
+  return {
+    officialSignals: seed.officialSignals,
+    officialSignalScore,
+    isOfficialRecent: seed.officialSignals.some((signal) => signal.signal === 'recent'),
+    isOfficialNoteworthy: seed.officialSignals.some((signal) => signal.signal === 'noteworthy'),
+  };
+}
+
 function deriveThemes(
   category: Skill['category'],
   tags: Skill['tags'],
@@ -253,6 +264,7 @@ function mergeSkill(seed: SkillSeed, enrichment?: SkillEnrichment): Skill {
     new Set([...(preset?.tags ?? []), ...(enrichment?.tags ?? []), 'official', 'bundled-skill']),
   );
   const relatedSkills = enrichment?.relatedSkills ?? preset?.relatedSkills ?? [];
+  const officialSignalMeta = buildOfficialSignalMeta(seed);
 
   return skillSchema.parse({
     name: seed.name,
@@ -261,6 +273,10 @@ function mergeSkill(seed: SkillSeed, enrichment?: SkillEnrichment): Skill {
     category,
     tags,
     themes: deriveThemes(category, tags, relatedSkills, preset, enrichment),
+    officialSignals: officialSignalMeta.officialSignals,
+    isOfficialRecent: officialSignalMeta.isOfficialRecent,
+    isOfficialNoteworthy: officialSignalMeta.isOfficialNoteworthy,
+    officialSignalScore: officialSignalMeta.officialSignalScore,
     difficulty: enrichment?.difficulty ?? preset?.difficulty ?? 'medium',
     recommendScore: enrichment?.recommendScore ?? preset?.recommendScore ?? defaultRecommendScore(seed.name),
     universalityScore:

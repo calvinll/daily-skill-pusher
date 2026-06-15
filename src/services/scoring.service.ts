@@ -5,6 +5,7 @@ import { diffDays } from '../utils/date.js';
 
 const RELATED_SKILL_BOOST = 8;
 const OFFICIAL_BUNDLED_BOOST = 4;
+const MAX_OFFICIAL_SIGNAL_BOOST = 8;
 const DIFFICULTY_BONUS: Record<Skill['difficulty'], number> = {
   easy: 4,
   medium: 2,
@@ -70,12 +71,17 @@ function getDifficultyAdjustment(skill: Skill): number {
   return DIFFICULTY_BONUS[skill.difficulty];
 }
 
+function getOfficialSignalBoost(skill: Skill): number {
+  return Math.min(skill.officialSignalScore, MAX_OFFICIAL_SIGNAL_BOOST);
+}
+
 export function scoreSkill(skill: Skill, skills: Skill[], records: PushRecord[], now: Date): ScoredSkill {
   const freshnessScore = getFreshnessScore(skill, records, now);
   const diversityScore = getDiversityScore(skill, records);
   const skillMap = new Map(skills.map((item) => [item.name, item]));
   const relatedSkillBoost = getRelatedSkillBoost(skill, skillMap, records);
   const officialBundledBoost = getOfficialBundledBoost(skill);
+  const officialSignalBoost = getOfficialSignalBoost(skill);
   const difficultyAdjustment = getDifficultyAdjustment(skill);
 
   const score =
@@ -85,6 +91,7 @@ export function scoreSkill(skill: Skill, skills: Skill[], records: PushRecord[],
     diversityScore * 0.1 +
     relatedSkillBoost +
     officialBundledBoost +
+    officialSignalBoost +
     difficultyAdjustment;
 
   return {

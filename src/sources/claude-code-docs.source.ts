@@ -1,10 +1,20 @@
+const DOCS_INDEX_URL = 'https://code.claude.com/docs/llms.txt';
 const COMMANDS_DOC_URL = 'https://code.claude.com/docs/en/commands.md';
+const CHANGELOG_DOC_URL = 'https://code.claude.com/docs/en/changelog.md';
+
+export type OfficialSignal = {
+  source: 'changelog' | 'whats-new';
+  url: string;
+  signal: 'recent' | 'noteworthy';
+  weight: number;
+};
 
 export type OfficialSkillSeed = {
   name: string;
   title: string;
   description: string;
   docsUrl: string;
+  officialSignals: OfficialSignal[];
 };
 
 function cleanDescription(value: string): string {
@@ -17,7 +27,7 @@ function cleanDescription(value: string): string {
     .trim();
 }
 
-function parseSkillRow(line: string): OfficialSkillSeed | null {
+function parseSkillRow(line: string): Omit<OfficialSkillSeed, 'officialSignals'> | null {
   const match = line.match(/^\|\s*`([^`]+)`\s*\|\s*(.+?)\s*\|$/);
   if (!match) {
     return null;
@@ -49,8 +59,13 @@ function parseSkillRow(line: string): OfficialSkillSeed | null {
   };
 }
 
-export async function fetchOfficialClaudeCodeSkills(): Promise<OfficialSkillSeed[]> {
-  const response = await fetch(COMMANDS_DOC_URL, {
+function extractCommandMentions(markdown: string): string[] {
+  const matches = markdown.matchAll(/`\/([a-z0-9-]+)(?:[^`]*)`/gi);
+  return Array.from(new Set(Array.from(matches, (match) => match[1]).filter(Boolean) as string[]));
+}
+
+async function fetchMarkdown(url: string): Promise<string> {
+  const response = await fetch(url, {
     headers: {
       'user-agent': 'daily-skill-pusher/0.1.0',
     },
@@ -58,14 +73,70 @@ export async function fetchOfficialClaudeCodeSkills(): Promise<OfficialSkillSeed
   });
 
   if (!response.ok) {
-    throw new Error(`Failed to fetch official Claude Code commands docs: ${response.status}`);
+    throw new Error(`Failed to fetch official Claude Code docs: ${url} ${response.status}`);
   }
 
-  const markdown = await response.text();
-  const skills = markdown
+  return response.text();
+}
+
+function collectWeeklyUrls(indexMarkdown: string): string[] {
+  const matches = indexMarkdown.matchAll(/https:\/\/code\.claude\.com\/docs\/en\/whats-new\/\d{4}-w\d{2}\.md/g);
+  const urls = Array.from(new Set(Array.from(matches, (match) => match[0])));
+  return urls.sort().slice(-3);
+}
+
+async function fetchOfficialSignals(): Promise<Map<string, OfficialSignal[]>> {
+  const [docsIndex, changelog] = await Promise.all([
+    fetchMarkdown(DOCS_INDEX_URL),
+    fetchMarkdown(CHANGELOG_DOC_URL),
+  ]);
+
+  const weeklyUrls = collectWeeklyUrls(docsIndex);
+  const weeklyPages = await Promise.all(weeklyUrls.map(async (url) => ({ url, markdown: await fetchMarkdown(url) })));
+
+  const signalMap = new Map<string, OfficialSignal[]>();
+
+  for (const commandName of extractCommandMentions(changelog)) {
+    const existing = signalMap.get(commandName) ?? [];
+    existing.push({
+      source: 'changelog',
+      url: CHANGELOG_DOC_URL,
+      signal: 'recent',
+      weight: 4,
+    });
+    signalMap.set(commandName, existing);
+  }
+
+  for (const page of weeklyPages) {
+    for (const commandName of extractCommandMentions(page.markdown)) {
+      const existing = signalMap.get(commandName) ?? [];
+      existing.push({
+        source: 'whats-new',
+        url: page.url,
+        signal: 'noteworthy',
+        weight: 6,
+      });
+      signalMap.set(commandName, existing);
+    }
+  }
+
+  return signalMap;
+}
+
+export async function fetchOfficialClaudeCodeSkills(): Promise<OfficialSkillSeed[]> {
+  const [commandsMarkdown, signalMap] = await Promise.all([
+    fetchMarkdown(COMMANDS_DOC_URL),
+    fetchOfficialSignals(),
+  ]);
+
+  const skills = commandsMarkdown
     .split('\n')
     .map((line) => parseSkillRow(line))
-    .filter((item): item is OfficialSkillSeed => item !== null);
+    .filter((item): item is Omit<OfficialSkillSeed, 'officialSignals'> => item !== null)
+    .map((skill) => ({
+      ...skill,
+      officialSignals: signalMap.get(skill.name) ?? [],
+    }));
 
   const deduped = new Map<string, OfficialSkillSeed>();
   for (const skill of skills) {
@@ -75,4 +146,4 @@ export async function fetchOfficialClaudeCodeSkills(): Promise<OfficialSkillSeed
   return Array.from(deduped.values());
 }
 
-export { COMMANDS_DOC_URL };
+export { CHANGELOG_DOC_URL, COMMANDS_DOC_URL, DOCS_INDEX_URL };

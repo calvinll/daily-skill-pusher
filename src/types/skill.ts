@@ -5,6 +5,13 @@ export const skillLinkSchema = z.object({
   url: z.string().url(),
 });
 
+export const officialSignalSchema = z.object({
+  source: z.enum(['changelog', 'whats-new']),
+  url: z.string().url(),
+  signal: z.enum(['recent', 'noteworthy']),
+  weight: z.number().min(0),
+});
+
 export const skillEnrichmentSchema = z.object({
   name: z.string().min(1),
   title: z.string().min(1).optional(),
@@ -20,6 +27,10 @@ export const skillEnrichmentSchema = z.object({
   links: z.array(skillLinkSchema).optional(),
   relatedSkills: z.array(z.string().min(1)).optional(),
   themes: z.array(z.string().min(1)).optional(),
+  officialSignals: z.array(officialSignalSchema).optional(),
+  isOfficialRecent: z.boolean().optional(),
+  isOfficialNoteworthy: z.boolean().optional(),
+  officialSignalScore: z.number().min(0).optional(),
   status: z.enum(['active', 'inactive']).optional(),
   pushCount: z.number().int().min(0).optional(),
   lastPushedAt: z.string().datetime({ offset: true }).nullable().optional(),
@@ -40,6 +51,10 @@ export const skillSchema = z.object({
   links: z.array(skillLinkSchema).min(1),
   relatedSkills: z.array(z.string().min(1)).default([]),
   themes: z.array(z.string().min(1)).min(1),
+  officialSignals: z.array(officialSignalSchema).default([]),
+  isOfficialRecent: z.boolean().default(false),
+  isOfficialNoteworthy: z.boolean().default(false),
+  officialSignalScore: z.number().min(0).default(0),
   status: z.enum(['active', 'inactive']),
   pushCount: z.number().int().min(0).default(0),
   lastPushedAt: z.string().datetime({ offset: true }).nullable().optional(),

@@ -144,9 +144,14 @@ describe('runDailyPush', () => {
 
     vi.stubGlobal(
       'fetch',
-      vi.fn()
-        .mockResolvedValueOnce({ ok: true, text: async () => OFFICIAL_COMMANDS_MARKDOWN })
-        .mockResolvedValueOnce({ ok: true, status: 200, json: async () => ({ code: 0, msg: 'success' }) }),
+      vi.fn(async (input: string | URL | RequestInfo) => {
+        const url = String(input);
+        if (url.includes('commands.md')) return { ok: true, text: async () => OFFICIAL_COMMANDS_MARKDOWN };
+        if (url.includes('llms.txt')) return { ok: true, text: async () => '' };
+        if (url.includes('changelog.md')) return { ok: true, text: async () => '' };
+        if (url.includes('open.feishu.cn')) return { ok: true, status: 200, json: async () => ({ code: 0, msg: 'success' }) };
+        return { ok: true, text: async () => '' };
+      }),
     );
 
     const result = await runDailyPush(createConfig(dataDir, true), {

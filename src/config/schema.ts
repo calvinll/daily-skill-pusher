@@ -23,6 +23,7 @@ const optionalNonEmptyString = z.preprocess(
 export const envSchema = z.object({
   APP_ENV: z.enum(['development', 'production', 'test']).default('development'),
   APP_TIMEZONE: z.string().min(1).default('Asia/Shanghai'),
+  WEB_PORT: z.coerce.number().int().min(1).default(4173),
   CRON_EXPRESSION: z.string().min(1).default('5 9 * * *'),
   FEISHU_ENABLED: z
     .enum(['true', 'false'])

@@ -12,6 +12,8 @@
     "preview": "tsx src/index.ts preview",
     "push": "tsx src/index.ts push",
     "schedule": "tsx src/index.ts schedule",
+    "web": "tsx src/index.ts web",
+    "build:web": "tsx src/index.ts build-web",
     "validate": "tsx src/index.ts validate",
     "build": "tsc -p tsconfig.json",
     "test": "vitest run"

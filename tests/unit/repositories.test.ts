@@ -5,7 +5,7 @@ import path from 'node:path';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import { SkillRepository } from '../../src/repositories/skill.repository.js';
-import { COMMANDS_DOC_URL } from '../../src/sources/claude-code-docs.source.js';
+import { CHANGELOG_DOC_URL, COMMANDS_DOC_URL } from '../../src/sources/claude-code-docs.source.js';
 
 const OFFICIAL_COMMANDS_MARKDOWN = `| \`/code-review [low|medium|high]\` | **[Skill](/en/skills#bundled-skills).** Review the current diff for correctness bugs and cleanups. |
 | \`/verify\` | **[Skill](/en/skills#bundled-skills).** Confirm a code change does what it should by building your project's app and observing the result. |
@@ -15,6 +15,9 @@ const OFFICIAL_COMMANDS_MARKDOWN = `| \`/code-review [low|medium|high]\` | **[Sk
 | \`/reload-skills\` | Re-scan [skill](/en/skills) and command directories so skills added or changed on disk during the session become available without restarting. |
 | \`/run-skill-generator\` | **[Skill](/en/skills#bundled-skills).** Teach /run and /verify how to build, launch, and drive your project's app from a clean environment by writing a per-project skill. |
 | \`/fewer-permission-prompts\` | **[Skill](/en/skills#bundled-skills).** Scan your transcripts for common read-only Bash and MCP tool calls, then add a prioritized allowlist to project .claude/settings.json to reduce permission prompts. |`;
+const DOCS_INDEX = `- [Week 22](https://code.claude.com/docs/en/whats-new/2026-w22.md)`;
+const CHANGELOG_MARKDOWN = `Added \`/reload-skills\` and improved \`/code-review\`.`;
+const WEEKLY_MARKDOWN = `Week 22 highlights include \`/reload-skills\`.`;
 
 async function createTempDataDir(): Promise<string> {
   const root = await mkdtemp(path.join(os.tmpdir(), 'daily-skill-pusher-'));
@@ -58,9 +61,13 @@ describe('SkillRepository', () => {
 
     vi.stubGlobal(
       'fetch',
-      vi.fn().mockResolvedValue({
-        ok: true,
-        text: async () => OFFICIAL_COMMANDS_MARKDOWN,
+      vi.fn(async (input: string | URL | RequestInfo) => {
+        const url = String(input);
+        if (url.includes('commands.md')) return { ok: true, text: async () => OFFICIAL_COMMANDS_MARKDOWN };
+        if (url.includes('llms.txt')) return { ok: true, text: async () => DOCS_INDEX };
+        if (url.includes('changelog.md')) return { ok: true, text: async () => CHANGELOG_MARKDOWN };
+        if (url.includes('2026-w22.md')) return { ok: true, text: async () => WEEKLY_MARKDOWN };
+        throw new Error(`Unexpected URL ${url}`);
       }),
     );
 
@@ -93,7 +100,10 @@ describe('SkillRepository', () => {
     expect(simplify?.whyRecommended).toContain('更干净');
     expect(reloadSkills?.example).toBe('/reload-skills');
     expect(reloadSkills?.whyRecommended).toContain('分发流程');
-    expect(reloadSkills?.scenes).toContain('刚新增或修改了本地 skill，不想重启 Claude Code 会话');
+    expect(reloadSkills?.officialSignalScore).toBeGreaterThan(0);
+    expect(reloadSkills?.officialSignals.some((signal) => signal.url === CHANGELOG_DOC_URL)).toBe(true);
+    expect(reloadSkills?.isOfficialRecent).toBe(true);
+    expect(reloadSkills?.isOfficialNoteworthy).toBe(true);
     expect(runSkillGenerator?.example).toBe('/run-skill-generator');
     expect(runSkillGenerator?.whyRecommended).toContain('运行流程');
     expect(fewerPermissionPrompts?.example).toBe('/fewer-permission-prompts');

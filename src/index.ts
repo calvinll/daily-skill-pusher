@@ -3,10 +3,12 @@ import process from 'node:process';
 
 import { createAppConfig } from './config/app-config.js';
 import { loadEnv } from './config/env.js';
+import { buildWebCommand } from './cli/build-web.js';
 import { previewCommand } from './cli/preview.js';
 import { pushCommand } from './cli/push.js';
 import { scheduleCommand } from './cli/schedule.js';
 import { validateCommand } from './cli/validate.js';
+import { webCommand } from './cli/web.js';
 
 async function main(): Promise<void> {
   const env = loadEnv();
@@ -43,6 +45,20 @@ async function main(): Promise<void> {
     .description('Validate env and data files')
     .action(async () => {
       await validateCommand(config);
+    });
+
+  program
+    .command('web')
+    .description('Start the showcase web server')
+    .action(async () => {
+      await webCommand(config);
+    });
+
+  program
+    .command('build-web')
+    .description('Build the static showcase site for deployment')
+    .action(async () => {
+      await buildWebCommand(config);
     });
 
   await program.parseAsync(process.argv);
