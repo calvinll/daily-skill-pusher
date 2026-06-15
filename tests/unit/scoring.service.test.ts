@@ -18,6 +18,7 @@ const baseSkill: Skill = {
   whyRecommended: 'good',
   links: [{ label: '技能文档', url: 'https://github.com/calvinll/daily-skill-pusher/blob/main/docs/skills/code-review.md' }],
   relatedSkills: ['verify'],
+  themes: ['high-frequency-productivity', 'official-high-value'],
   status: 'active',
   pushCount: 0,
   lastPushedAt: null,

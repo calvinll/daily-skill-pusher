@@ -102,6 +102,7 @@ export async function runDailyPush(
     skillName: selected.skill.name,
     channel: adapter.channelName,
     content: payload.previewText,
+    selectedTheme: selected.selectedTheme,
     status: pushResult.success ? 'success' : 'failed',
     errorMessage: pushResult.errorMessage,
     createdAt: getIsoTimestamp(now),

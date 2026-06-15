@@ -9,7 +9,7 @@ import { runDailyPush } from '../../src/services/daily-runner.service.js';
 
 const OFFICIAL_COMMANDS_MARKDOWN = `| \`/verify\` | **[Skill](/en/skills#bundled-skills).** Confirm a code change does what it should by building your project's app and observing the result. |`;
 
-function createConfig(dataDir: string): AppConfig {
+function createConfig(dataDir: string, feishuEnabled = false): AppConfig {
   return {
     app: {
       env: 'test',
@@ -27,7 +27,7 @@ function createConfig(dataDir: string): AppConfig {
     },
     channels: {
       feishu: {
-        enabled: false,
+        enabled: feishuEnabled,
         webhookUrl: 'https://open.feishu.cn/open-apis/bot/v2/hook/test',
         botSecret: undefined,
         requiredKeyword: undefined,
@@ -59,6 +59,7 @@ describe('runDailyPush', () => {
           example: '/verify',
           whyRecommended: 'good',
           relatedSkills: [],
+          themes: ['high-frequency-productivity'],
           status: 'active'
         }
       ]),
@@ -82,6 +83,7 @@ describe('runDailyPush', () => {
 
     expect(result.selectedSkill).toBe('verify');
     expect(result.pushResult.success).toBe(true);
+    expect(result.record?.selectedTheme).toBeUndefined();
     expect(result.content).toContain('效果验证助手');
     expect(JSON.parse(historyRaw)).toEqual([]);
   });
@@ -106,5 +108,44 @@ describe('runDailyPush', () => {
     expect(result.pushResult.responseBody).toEqual({ message: 'Feishu robot push is disabled.' });
     expect(fetchMock).not.toHaveBeenCalled();
     expect(history).toHaveLength(0);
+  });
+
+  it('records the selected theme on a successful send', async () => {
+    const dataDir = await mkdtemp(path.join(os.tmpdir(), 'daily-skill-pusher-'));
+    await writeFile(
+      path.join(dataDir, 'skills.json'),
+      JSON.stringify([
+        {
+          name: 'verify',
+          title: '效果验证助手',
+          description: 'desc',
+          category: ['quality'],
+          tags: ['verify'],
+          difficulty: 'easy',
+          recommendScore: 90,
+          universalityScore: 90,
+          scenes: ['a', 'b'],
+          example: '/verify',
+          whyRecommended: 'good',
+          relatedSkills: [],
+          themes: ['high-frequency-productivity'],
+          status: 'active'
+        }
+      ]),
+    );
+    await writeFile(path.join(dataDir, 'push-history.json'), '[]');
+
+    vi.stubGlobal(
+      'fetch',
+      vi.fn()
+        .mockResolvedValueOnce({ ok: true, text: async () => OFFICIAL_COMMANDS_MARKDOWN })
+        .mockResolvedValueOnce({ ok: true, status: 200, json: async () => ({ code: 0, msg: 'success' }) }),
+    );
+
+    const result = await runDailyPush(createConfig(dataDir, true), {
+      now: new Date('2026-06-11T09:00:00.000Z'),
+    });
+
+    expect(result.record?.selectedTheme).toBe('high-frequency-productivity');
   });
 });

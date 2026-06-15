@@ -14,6 +14,7 @@ const DIFFICULTY_BONUS: Record<Skill['difficulty'], number> = {
 export type ScoredSkill = {
   skill: Skill;
   score: number;
+  selectedTheme?: string;
 };
 
 function getFreshnessScore(skill: Skill, records: PushRecord[], now: Date): number {

@@ -6,6 +6,7 @@ export const pushRecordSchema = z.object({
   skillName: z.string().min(1),
   channel: z.string().min(1),
   content: z.string().min(1),
+  selectedTheme: z.string().optional(),
   status: z.enum(['success', 'failed', 'skipped']),
   errorMessage: z.string().optional(),
   createdAt: z.string().datetime({ offset: true }),

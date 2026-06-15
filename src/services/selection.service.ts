@@ -5,6 +5,14 @@ import type { Skill } from '../types/skill.js';
 import { isWithinDays } from '../utils/date.js';
 import { scoreSkill, type ScoredSkill } from './scoring.service.js';
 
+const THEME_ROTATION = [
+  'high-frequency-productivity',
+  'setup-workflow',
+  'official-high-value',
+  'team-collaboration',
+  'learning-path',
+] as const;
+
 function hasRepeatedCategory(
   skill: Skill,
   skills: Skill[],
@@ -60,6 +68,54 @@ function fallbackCandidates(skills: Skill[], records: PushRecord[], now: Date, c
   return skills.filter((skill) => !wasRecentlyPushed(skill, records, now, fallbackWindow));
 }
 
+function getLatestSuccessfulTheme(records: PushRecord[], skillMap: Map<string, Skill>): string | undefined {
+  const latestRecord = records
+    .filter((record) => record.status === 'success')
+    .sort((left, right) => right.createdAt.localeCompare(left.createdAt))[0];
+
+  if (!latestRecord) {
+    return undefined;
+  }
+
+  if (latestRecord.selectedTheme) {
+    return latestRecord.selectedTheme;
+  }
+
+  return skillMap.get(latestRecord.skillName)?.themes[0];
+}
+
+function choosePreferredTheme(skills: Skill[], records: PushRecord[]): string | undefined {
+  const skillMap = new Map(skills.map((skill) => [skill.name, skill]));
+  const candidateThemes = new Set(skills.flatMap((skill) => skill.themes));
+  const latestTheme = getLatestSuccessfulTheme(records, skillMap);
+
+  const lastUsedByTheme = new Map<string, string>();
+  const successfulRecords = records
+    .filter((record) => record.status === 'success')
+    .sort((left, right) => right.createdAt.localeCompare(left.createdAt));
+
+  for (const record of successfulRecords) {
+    const theme = record.selectedTheme ?? skillMap.get(record.skillName)?.themes[0];
+    if (theme && !lastUsedByTheme.has(theme)) {
+      lastUsedByTheme.set(theme, record.createdAt);
+    }
+  }
+
+  const orderedThemes = THEME_ROTATION.filter((theme) => candidateThemes.has(theme)).sort((left, right) => {
+    if (left === latestTheme) return 1;
+    if (right === latestTheme) return -1;
+
+    const leftLastUsed = lastUsedByTheme.get(left);
+    const rightLastUsed = lastUsedByTheme.get(right);
+    if (!leftLastUsed && !rightLastUsed) return 0;
+    if (!leftLastUsed) return -1;
+    if (!rightLastUsed) return 1;
+    return leftLastUsed.localeCompare(rightLastUsed);
+  });
+
+  return orderedThemes[0];
+}
+
 export function selectDailySkill(
   skills: Skill[],
   records: PushRecord[],
@@ -73,8 +129,14 @@ export function selectDailySkill(
     throw new Error('No eligible skills available for today.');
   }
 
-  const scored = finalCandidates
-    .map((skill) => scoreSkill(skill, skills, records, now))
+  const preferredTheme = choosePreferredTheme(finalCandidates, records);
+  const themedCandidates = preferredTheme
+    ? finalCandidates.filter((skill) => skill.themes.includes(preferredTheme))
+    : finalCandidates;
+  const rankingPool = themedCandidates.length > 0 ? themedCandidates : finalCandidates;
+
+  const scored = rankingPool
+    .map((skill) => ({ ...scoreSkill(skill, skills, records, now), selectedTheme: preferredTheme }))
     .sort((left, right) => right.score - left.score);
 
   return scored[0]!;

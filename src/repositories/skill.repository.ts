@@ -21,6 +21,7 @@ type SkillPreset = {
   description?: string;
   category?: Skill['category'];
   tags?: Skill['tags'];
+  themes?: Skill['themes'];
   difficulty?: Skill['difficulty'];
   recommendScore?: Skill['recommendScore'];
   universalityScore?: Skill['universalityScore'];
@@ -37,6 +38,7 @@ const SKILL_PRESETS: Record<string, SkillPreset> = {
   'code-review': {
     category: ['official', 'bundled-skill', 'quality'],
     tags: ['review', 'quality', 'pre-commit'],
+    themes: ['high-frequency-productivity', 'official-high-value'],
     difficulty: 'easy',
     recommendScore: 92,
     universalityScore: 95,
@@ -48,6 +50,7 @@ const SKILL_PRESETS: Record<string, SkillPreset> = {
   verify: {
     category: ['official', 'bundled-skill', 'verification'],
     tags: ['verification', 'manual-test'],
+    themes: ['high-frequency-productivity', 'official-high-value', 'learning-path'],
     difficulty: 'easy',
     recommendScore: 90,
     universalityScore: 90,
@@ -59,6 +62,7 @@ const SKILL_PRESETS: Record<string, SkillPreset> = {
   run: {
     category: ['official', 'bundled-skill', 'execution'],
     tags: ['run', 'manual-check'],
+    themes: ['high-frequency-productivity', 'official-high-value', 'learning-path'],
     difficulty: 'easy',
     recommendScore: 89,
     universalityScore: 92,
@@ -70,6 +74,7 @@ const SKILL_PRESETS: Record<string, SkillPreset> = {
   loop: {
     category: ['official', 'bundled-skill', 'automation'],
     tags: ['loop', 'polling', 'follow-up'],
+    themes: ['high-frequency-productivity', 'official-high-value', 'learning-path'],
     difficulty: 'easy',
     recommendScore: 90,
     universalityScore: 92,
@@ -81,6 +86,7 @@ const SKILL_PRESETS: Record<string, SkillPreset> = {
   'claude-api': {
     category: ['official', 'bundled-skill', 'reference'],
     tags: ['api', 'sdk', 'reference'],
+    themes: ['official-high-value'],
     difficulty: 'medium',
     recommendScore: 88,
     universalityScore: 86,
@@ -92,6 +98,7 @@ const SKILL_PRESETS: Record<string, SkillPreset> = {
   batch: {
     category: ['official', 'bundled-skill', 'orchestration'],
     tags: ['batch', 'parallel', 'multi-agent'],
+    themes: ['team-collaboration', 'official-high-value'],
     difficulty: 'hard',
     recommendScore: 91,
     universalityScore: 84,
@@ -103,6 +110,7 @@ const SKILL_PRESETS: Record<string, SkillPreset> = {
   simplify: {
     category: ['official', 'bundled-skill', 'cleanup'],
     tags: ['simplify', 'cleanup', 'refactor'],
+    themes: ['high-frequency-productivity'],
     difficulty: 'easy',
     recommendScore: 89,
     universalityScore: 88,
@@ -114,6 +122,7 @@ const SKILL_PRESETS: Record<string, SkillPreset> = {
   debug: {
     category: ['official', 'bundled-skill', 'troubleshooting'],
     tags: ['debug', 'logs', 'diagnostics'],
+    themes: ['official-high-value'],
     difficulty: 'medium',
     recommendScore: 86,
     universalityScore: 82,
@@ -125,6 +134,7 @@ const SKILL_PRESETS: Record<string, SkillPreset> = {
   'reload-skills': {
     category: ['official', 'skill-workflow', 'refresh'],
     tags: ['reload-skills', 'skills', 'commands'],
+    themes: ['setup-workflow', 'team-collaboration', 'official-high-value'],
     difficulty: 'easy',
     recommendScore: 91,
     universalityScore: 85,
@@ -136,6 +146,7 @@ const SKILL_PRESETS: Record<string, SkillPreset> = {
   'run-skill-generator': {
     category: ['official', 'bundled-skill', 'workflow-setup'],
     tags: ['run-skill-generator', 'run', 'verify', 'setup'],
+    themes: ['setup-workflow', 'team-collaboration'],
     difficulty: 'medium',
     recommendScore: 89,
     universalityScore: 84,
@@ -147,6 +158,7 @@ const SKILL_PRESETS: Record<string, SkillPreset> = {
   'fewer-permission-prompts': {
     category: ['official', 'bundled-skill', 'workflow-setup'],
     tags: ['permissions', 'settings', 'productivity'],
+    themes: ['setup-workflow', 'high-frequency-productivity'],
     difficulty: 'easy',
     recommendScore: 87,
     universalityScore: 86,
@@ -188,17 +200,67 @@ function mergeLinks(seed: SkillSeed, enrichment?: SkillEnrichment) {
   return [officialLink, ...extras];
 }
 
+function deriveThemes(
+  category: Skill['category'],
+  tags: Skill['tags'],
+  relatedSkills: Skill['relatedSkills'],
+  preset?: SkillPreset,
+  enrichment?: SkillEnrichment,
+): Skill['themes'] {
+  const themes = new Set<string>([...(preset?.themes ?? []), ...(enrichment?.themes ?? [])]);
+
+  if (
+    category.includes('official') ||
+    category.includes('bundled-skill') ||
+    tags.includes('official') ||
+    tags.includes('bundled-skill')
+  ) {
+    themes.add('official-high-value');
+  }
+
+  if (
+    category.some((value) => ['skill-workflow', 'workflow-setup'].includes(value)) ||
+    tags.some((value) => ['permissions', 'settings', 'setup', 'skills', 'commands'].includes(value))
+  ) {
+    themes.add('setup-workflow');
+  }
+
+  if (
+    category.some((value) => ['quality', 'verification', 'execution', 'automation', 'cleanup'].includes(value)) ||
+    tags.some((value) => ['review', 'manual-test', 'run', 'polling', 'productivity', 'cleanup', 'refactor'].includes(value))
+  ) {
+    themes.add('high-frequency-productivity');
+  }
+
+  if (
+    category.some((value) => ['orchestration', 'workflow-setup', 'skill-workflow'].includes(value)) ||
+    tags.some((value) => ['multi-agent', 'setup', 'permissions', 'skills'].includes(value))
+  ) {
+    themes.add('team-collaboration');
+  }
+
+  if (relatedSkills.length > 0) {
+    themes.add('learning-path');
+  }
+
+  return Array.from(themes.size > 0 ? themes : new Set(['official-high-value']));
+}
+
 function mergeSkill(seed: SkillSeed, enrichment?: SkillEnrichment): Skill {
   const preset = SKILL_PRESETS[seed.name];
+  const category = enrichment?.category ?? preset?.category ?? ['official', 'bundled-skill'];
+  const tags = Array.from(
+    new Set([...(preset?.tags ?? []), ...(enrichment?.tags ?? []), 'official', 'bundled-skill']),
+  );
+  const relatedSkills = enrichment?.relatedSkills ?? preset?.relatedSkills ?? [];
 
   return skillSchema.parse({
     name: seed.name,
     title: enrichment?.title ?? preset?.title ?? seed.title,
     description: enrichment?.description ?? preset?.description ?? seed.description,
-    category: enrichment?.category ?? preset?.category ?? ['official', 'bundled-skill'],
-    tags: Array.from(
-      new Set([...(preset?.tags ?? []), ...(enrichment?.tags ?? []), 'official', 'bundled-skill']),
-    ),
+    category,
+    tags,
+    themes: deriveThemes(category, tags, relatedSkills, preset, enrichment),
     difficulty: enrichment?.difficulty ?? preset?.difficulty ?? 'medium',
     recommendScore: enrichment?.recommendScore ?? preset?.recommendScore ?? defaultRecommendScore(seed.name),
     universalityScore:
@@ -208,7 +270,7 @@ function mergeSkill(seed: SkillSeed, enrichment?: SkillEnrichment): Skill {
     whyRecommended:
       enrichment?.whyRecommended ?? preset?.whyRecommended ?? buildDefaultWhyRecommended(seed),
     links: mergeLinks(seed, enrichment),
-    relatedSkills: enrichment?.relatedSkills ?? preset?.relatedSkills ?? [],
+    relatedSkills,
     status: enrichment?.status ?? preset?.status ?? 'active',
     pushCount: enrichment?.pushCount ?? preset?.pushCount ?? 0,
     lastPushedAt: enrichment?.lastPushedAt ?? preset?.lastPushedAt ?? null,

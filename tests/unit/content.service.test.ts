@@ -22,6 +22,7 @@ const skill: Skill = {
     },
   ],
   relatedSkills: ['run'],
+  themes: ['high-frequency-productivity', 'official-high-value', 'learning-path'],
   status: 'active',
   pushCount: 0,
   lastPushedAt: null,

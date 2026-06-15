@@ -80,6 +80,8 @@ describe('SkillRepository', () => {
     expect(verify?.links[0]?.url).toBe(COMMANDS_DOC_URL);
     expect(verify?.links[1]?.label).toBe('项目补充说明');
     expect(verify?.example).toBe('/verify');
+    expect(verify?.themes).toContain('high-frequency-productivity');
+    expect(verify?.themes).toContain('learning-path');
 
     expect(loop?.example).toBe('/loop 5m check if the deploy finished');
     expect(loop?.whyRecommended).toContain('持续盯着');
@@ -87,6 +89,7 @@ describe('SkillRepository', () => {
 
     expect(batch?.example).toContain('/batch');
     expect(batch?.whyRecommended).toContain('并行');
+    expect(batch?.themes).toContain('team-collaboration');
     expect(simplify?.whyRecommended).toContain('更干净');
     expect(reloadSkills?.example).toBe('/reload-skills');
     expect(reloadSkills?.whyRecommended).toContain('分发流程');

@@ -31,6 +31,7 @@ const skills: Skill[] = [
       },
     ],
     relatedSkills: ['verify'],
+    themes: ['high-frequency-productivity', 'official-high-value'],
     status: 'active',
     pushCount: 0,
     lastPushedAt: null,
@@ -54,6 +55,7 @@ const skills: Skill[] = [
       },
     ],
     relatedSkills: [],
+    themes: ['high-frequency-productivity', 'official-high-value', 'learning-path'],
     status: 'active',
     pushCount: 0,
     lastPushedAt: null,
@@ -77,6 +79,7 @@ const skills: Skill[] = [
       },
     ],
     relatedSkills: ['verify'],
+    themes: ['high-frequency-productivity'],
     status: 'active',
     pushCount: 0,
     lastPushedAt: null,
@@ -125,5 +128,6 @@ describe('selectDailySkill', () => {
     const result = selectDailySkill(skills, records, now, baseConfig);
 
     expect(result.skill.name).toBe('verify');
+    expect(result.selectedTheme).toBe('official-high-value');
   });
 });

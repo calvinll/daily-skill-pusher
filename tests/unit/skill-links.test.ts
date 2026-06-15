@@ -18,6 +18,7 @@ describe('skillSchema', () => {
       whyRecommended: 'good',
       links: [],
       relatedSkills: [],
+      themes: ['official-high-value'],
       status: 'active',
       pushCount: 0,
       lastPushedAt: null,
