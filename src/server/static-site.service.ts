@@ -66,7 +66,7 @@ export async function buildStaticSite(config: AppConfig): Promise<string> {
   await writeFile(path.join(dataDir, 'skills.json'), `${JSON.stringify(skills, null, 2)}\n`, 'utf8');
   await writeFile(path.join(dataDir, 'skill-details.json'), `${JSON.stringify(skillDetails, null, 2)}\n`, 'utf8');
 
-  for (const page of ['index.html', 'history.html', 'skills.html']) {
+  for (const page of ['index.html', 'history.html', 'skills.html', 'skill.html']) {
     const html = await readFile(path.join(webDir, page), 'utf8');
     await writeFile(path.join(distDir, page), rewriteApiReferences(html), 'utf8');
   }

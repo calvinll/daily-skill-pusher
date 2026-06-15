@@ -60,10 +60,12 @@ describe('buildStaticSite', () => {
     const appJs = await readFile(path.join(distDir, 'assets', 'app.js'), 'utf8');
 
     expect(files).toContain('index.html');
+    expect(files).toContain('skill.html');
     expect(files).toContain('assets');
     expect(indexHtml).toContain('./assets/app.css');
     expect(indexHtml).toContain('./history.html');
     expect(appJs).toContain("withBasePath('/data/today.json')");
+    expect(appJs).toContain('skill-details.json');
     expect(JSON.parse(todayJson).selectedSkill.name).toBe('run');
   });
 });
