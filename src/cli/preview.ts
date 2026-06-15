@@ -12,7 +12,7 @@ export async function previewCommand(config: AppConfig): Promise<void> {
     historyRepository.getAll(),
   ]);
 
-  const result = selectDailySkill(skills, records, new Date(), config.selection);
+  const result = selectDailySkill(skills, records, new Date(), config.selection, config.app.timezone);
   const payload = createDailySkillContent(result.skill);
 
   console.log(payload.previewText);

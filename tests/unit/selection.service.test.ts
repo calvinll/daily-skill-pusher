@@ -9,6 +9,13 @@ const baseConfig: SelectionConfig = {
   daysToAvoidRepeat: 14,
   avoidSameCategoryDays: 2,
   dailyCount: 1,
+  weekdayThemes: {
+    monday: 'high-frequency-productivity',
+    tuesday: 'setup-workflow',
+    wednesday: 'official-high-value',
+    thursday: 'team-collaboration',
+    friday: 'learning-path',
+  },
 };
 
 const skills: Skill[] = [
@@ -129,5 +136,12 @@ describe('selectDailySkill', () => {
 
     expect(result.skill.name).toBe('verify');
     expect(result.selectedTheme).toBe('official-high-value');
+  });
+
+  it('prefers the configured weekday theme when candidates exist', () => {
+    const monday = new Date('2026-06-15T01:00:00.000Z');
+    const result = selectDailySkill(skills, [], monday, baseConfig, 'Asia/Shanghai');
+
+    expect(result.selectedTheme).toBe('high-frequency-productivity');
   });
 });

@@ -18,6 +18,13 @@ export function createAppConfig(env: EnvConfig, cwd: string = process.cwd()): Ap
       daysToAvoidRepeat: env.DAYS_TO_AVOID_REPEAT,
       avoidSameCategoryDays: env.AVOID_SAME_CATEGORY_DAYS,
       dailyCount: env.DAILY_COUNT,
+      weekdayThemes: {
+        monday: env.WEEKDAY_THEME_MONDAY,
+        tuesday: env.WEEKDAY_THEME_TUESDAY,
+        wednesday: env.WEEKDAY_THEME_WEDNESDAY,
+        thursday: env.WEEKDAY_THEME_THURSDAY,
+        friday: env.WEEKDAY_THEME_FRIDAY,
+      },
     },
     channels: {
       feishu: {

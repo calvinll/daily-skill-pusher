@@ -1,5 +1,13 @@
 import { z } from 'zod';
 
+const weekdayThemeSchema = z.enum([
+  'high-frequency-productivity',
+  'setup-workflow',
+  'official-high-value',
+  'team-collaboration',
+  'learning-path',
+]);
+
 const optionalNonEmptyString = z.preprocess(
   (value) => {
     if (typeof value !== 'string') {
@@ -30,6 +38,11 @@ export const envSchema = z.object({
   DAYS_TO_AVOID_REPEAT: z.coerce.number().int().min(0).default(14),
   AVOID_SAME_CATEGORY_DAYS: z.coerce.number().int().min(0).default(2),
   DAILY_COUNT: z.coerce.number().int().min(1).max(1).default(1),
+  WEEKDAY_THEME_MONDAY: weekdayThemeSchema.default('high-frequency-productivity'),
+  WEEKDAY_THEME_TUESDAY: weekdayThemeSchema.default('setup-workflow'),
+  WEEKDAY_THEME_WEDNESDAY: weekdayThemeSchema.default('official-high-value'),
+  WEEKDAY_THEME_THURSDAY: weekdayThemeSchema.default('team-collaboration'),
+  WEEKDAY_THEME_FRIDAY: weekdayThemeSchema.default('learning-path'),
   SCHEDULER_ENABLED: z
     .enum(['true', 'false'])
     .default('true')

@@ -1,7 +1,15 @@
+export type WeekdayTheme =
+  | 'high-frequency-productivity'
+  | 'setup-workflow'
+  | 'official-high-value'
+  | 'team-collaboration'
+  | 'learning-path';
+
 export type SelectionConfig = {
   daysToAvoidRepeat: number;
   avoidSameCategoryDays: number;
   dailyCount: number;
+  weekdayThemes: Record<string, WeekdayTheme>;
 };
 
 export type FeishuChannelConfig = {

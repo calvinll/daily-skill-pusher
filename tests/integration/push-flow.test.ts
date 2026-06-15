@@ -24,6 +24,13 @@ function createConfig(dataDir: string, feishuEnabled = false): AppConfig {
       daysToAvoidRepeat: 14,
       avoidSameCategoryDays: 2,
       dailyCount: 1,
+      weekdayThemes: {
+        monday: 'high-frequency-productivity',
+        tuesday: 'setup-workflow',
+        wednesday: 'official-high-value',
+        thursday: 'team-collaboration',
+        friday: 'learning-path',
+      },
     },
     channels: {
       feishu: {

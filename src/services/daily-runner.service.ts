@@ -64,7 +64,7 @@ export async function runDailyPush(
     historyRepository.getAll(),
   ]);
 
-  const selected = selectDailySkill(skills, records, now, config.selection);
+  const selected = selectDailySkill(skills, records, now, config.selection, config.app.timezone);
   const payload = createDailySkillContent(selected.skill);
 
   if (options.dryRun) {

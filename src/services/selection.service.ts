@@ -2,7 +2,7 @@ import { REPEAT_WINDOW_FALLBACK_DIVISOR } from '../constants/selection.js';
 import type { SelectionConfig } from '../types/app-config.js';
 import type { PushRecord } from '../types/push-record.js';
 import type { Skill } from '../types/skill.js';
-import { isWithinDays } from '../utils/date.js';
+import { getLocalWeekday, isWithinDays } from '../utils/date.js';
 import { scoreSkill, type ScoredSkill } from './scoring.service.js';
 
 const THEME_ROTATION = [
@@ -84,10 +84,22 @@ function getLatestSuccessfulTheme(records: PushRecord[], skillMap: Map<string, S
   return skillMap.get(latestRecord.skillName)?.themes[0];
 }
 
-function choosePreferredTheme(skills: Skill[], records: PushRecord[]): string | undefined {
+function choosePreferredTheme(
+  skills: Skill[],
+  records: PushRecord[],
+  config: SelectionConfig,
+  now: Date,
+  timezone: string,
+): string | undefined {
   const skillMap = new Map(skills.map((skill) => [skill.name, skill]));
   const candidateThemes = new Set(skills.flatMap((skill) => skill.themes));
   const latestTheme = getLatestSuccessfulTheme(records, skillMap);
+  const weekday = getLocalWeekday(now, timezone);
+  const configuredTheme = config.weekdayThemes[weekday];
+
+  if (configuredTheme && candidateThemes.has(configuredTheme)) {
+    return configuredTheme;
+  }
 
   const lastUsedByTheme = new Map<string, string>();
   const successfulRecords = records
@@ -121,6 +133,7 @@ export function selectDailySkill(
   records: PushRecord[],
   now: Date,
   config: SelectionConfig,
+  timezone = 'Asia/Shanghai',
 ): ScoredSkill {
   const candidates = buildCandidates(skills, records, now, config);
   const finalCandidates = candidates.length > 0 ? candidates : fallbackCandidates(skills, records, now, config);
@@ -129,7 +142,7 @@ export function selectDailySkill(
     throw new Error('No eligible skills available for today.');
   }
 
-  const preferredTheme = choosePreferredTheme(finalCandidates, records);
+  const preferredTheme = choosePreferredTheme(finalCandidates, records, config, now, timezone);
   const themedCandidates = preferredTheme
     ? finalCandidates.filter((skill) => skill.themes.includes(preferredTheme))
     : finalCandidates;

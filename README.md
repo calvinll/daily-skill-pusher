@@ -42,6 +42,7 @@ cp .env.example .env
 - `DAYS_TO_AVOID_REPEAT`：避免重复推送天数
 - `AVOID_SAME_CATEGORY_DAYS`：避免相同分类重复天数
 - `DAILY_COUNT`：每天推送数量，MVP 固定为 1
+- `WEEKDAY_THEME_MONDAY` ~ `WEEKDAY_THEME_FRIDAY`：周一到周五的主题编排
 
 ## 数据文件
 
@@ -139,6 +140,7 @@ FEISHU_ENABLED=false
 
 - 官方 / bundled skill 优先级
 - 高频提效 / 配置工作流 / 官方高价值 / 学习路径 等主题
+- 周一到周五的 weekday 主题编排（默认：周一高频提效、周二配置工作流、周三官方高价值、周四团队协作、周五学习路径）
 - 最近推送历史与主题轮换
 - related skills 跟进推荐
 - 难度平滑（更偏向 easy / medium）
