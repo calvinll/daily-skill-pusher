@@ -71,6 +71,7 @@ function renderToday(data) {
       <div class="badge-group">${data.selectedSkill.themes.map((theme) => badge(theme, `./skills.html?theme=${encodeURIComponent(theme)}`, 'theme-badge')).join('')}</div>
       <div class="link-stack">
         <p class="link-row"><a href="./skill.html?name=${encodeURIComponent(data.selectedSkill.name)}">查看技能详情 →</a></p>
+        <p class="link-row"><a href="./skills.html?theme=${encodeURIComponent(data.selectedTheme ?? '')}">查看更多同主题技能 →</a></p>
         <p class="link-row"><a href="${data.selectedSkill.links[0]?.url ?? '#'}" target="_blank" rel="noreferrer">查看官方文档 →</a></p>
       </div>
     </section>
