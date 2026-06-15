@@ -56,9 +56,14 @@ describe('buildStaticSite', () => {
     const distDir = await buildStaticSite(config);
     const files = await readdir(distDir);
     const todayJson = await readFile(path.join(distDir, 'data', 'today.json'), 'utf8');
+    const indexHtml = await readFile(path.join(distDir, 'index.html'), 'utf8');
+    const appJs = await readFile(path.join(distDir, 'assets', 'app.js'), 'utf8');
 
     expect(files).toContain('index.html');
     expect(files).toContain('assets');
+    expect(indexHtml).toContain('./assets/app.css');
+    expect(indexHtml).toContain('./history.html');
+    expect(appJs).toContain("withBasePath('/data/today.json')");
     expect(JSON.parse(todayJson).selectedSkill.name).toBe('run');
   });
 });

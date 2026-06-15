@@ -28,9 +28,10 @@ function rewriteApiReferences(html: string): string {
 }
 
 function rewriteFrontendForStatic(js: string): string {
-  return js.replace(/fetchJson\('\/api\/today'\)/g, "fetchJson('/data/today.json')")
-    .replace(/fetchJson\('\/api\/history'\)/g, "fetchJson('/data/history.json')")
-    .replace(/fetchJson\('\/api\/skills'\)/g, "fetchJson('/data/skills.json')");
+  return js
+    .replace(/withBasePath\('\/api\/today'\)/g, "withBasePath('/data/today.json')")
+    .replace(/withBasePath\('\/api\/history'\)/g, "withBasePath('/data/history.json')")
+    .replace(/withBasePath\('\/api\/skills'\)/g, "withBasePath('/data/skills.json')");
 }
 
 export async function buildStaticSite(config: AppConfig): Promise<string> {

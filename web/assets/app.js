@@ -1,3 +1,19 @@
+function getBasePath() {
+  if (window.location.hostname.endsWith('github.io')) {
+    const segments = window.location.pathname.split('/').filter(Boolean);
+    if (segments.length > 0) {
+      return `/${segments[0]}`;
+    }
+  }
+  return '';
+}
+
+const BASE_PATH = getBasePath();
+
+function withBasePath(relativePath) {
+  return `${BASE_PATH}${relativePath}`;
+}
+
 async function fetchJson(url) {
   const response = await fetch(url);
   if (!response.ok) throw new Error(`Failed to fetch ${url}`);
@@ -46,10 +62,11 @@ function renderSkills(items) {
 }
 
 const path = window.location.pathname;
-if (path === '/' || path.endsWith('/index.html')) {
-  fetchJson('/api/today').then(renderToday).catch(console.error);
-} else if (path.endsWith('/history.html')) {
-  fetchJson('/api/history').then(renderHistory).catch(console.error);
-} else if (path.endsWith('/skills.html')) {
-  fetchJson('/api/skills').then(renderSkills).catch(console.error);
+const normalizedPath = BASE_PATH ? path.replace(BASE_PATH, '') || '/' : path;
+if (normalizedPath === '/' || normalizedPath.endsWith('/index.html')) {
+  fetchJson(withBasePath('/api/today')).then(renderToday).catch(console.error);
+} else if (normalizedPath.endsWith('/history.html')) {
+  fetchJson(withBasePath('/api/history')).then(renderHistory).catch(console.error);
+} else if (normalizedPath.endsWith('/skills.html')) {
+  fetchJson(withBasePath('/api/skills')).then(renderSkills).catch(console.error);
 }

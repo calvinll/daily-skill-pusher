@@ -69,7 +69,7 @@ async function fetchMarkdown(url: string): Promise<string> {
     headers: {
       'user-agent': 'daily-skill-pusher/0.1.0',
     },
-    signal: AbortSignal.timeout(10_000),
+    signal: AbortSignal.timeout(30_000),
   });
 
   if (!response.ok) {
