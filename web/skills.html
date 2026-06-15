@@ -29,7 +29,17 @@
             <option value="">全部主题</option>
           </select>
         </label>
+        <label class="filter-field">
+          <span>难度</span>
+          <select id="skills-difficulty-filter">
+            <option value="">全部难度</option>
+            <option value="easy">easy</option>
+            <option value="medium">medium</option>
+            <option value="hard">hard</option>
+          </select>
+        </label>
       </section>
+      <p id="skills-result-count" class="meta"></p>
       <section id="skills-list" class="list"></section>
       <p id="skills-empty" class="empty-state" hidden>没有找到符合条件的技能。</p>
     </main>
