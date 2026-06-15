@@ -52,5 +52,15 @@
     "content": "🧠 今日精选 Skill：/reload-skills\n\n适合场景：\n- 刚新增或修改了本地 skill，不想重启 Claude Code 会话\n- 团队在试装自定义 skills，希望马上验证是否生效\n\n推荐用法：\n/reload-skills\n\n为什么推荐：\n它能让 skill 的安装、调试和分发流程顺畅很多，特别适合正在推广自定义 skill 的团队。\n\n使用入口：\n- Claude Code官方文档: https://code.claude.com/docs/en/commands.md\n\n关联技能：\nloop / claude-api",
     "status": "success",
     "createdAt": "2026-06-14T06:02:05.419Z"
+  },
+  {
+    "id": "push_1781505304518_a244d23a",
+    "date": "2026-06-15",
+    "skillName": "simplify",
+    "channel": "feishu",
+    "content": "🧠 今日精选 Skill：/simplify\n\n适合场景：\n- 改完代码后想顺手清理冗余实现\n- 希望把改动整理得更简洁、更顺手维护\n\n推荐用法：\n/simplify\n\n为什么推荐：\n它不强调找 bug，而是专注于让代码更干净、更顺手，是提交前很好用的一步。\n\n使用入口：\n- Claude Code官方文档: https://code.claude.com/docs/en/commands.md\n\n关联技能：\ncode-review / verify",
+    "selectedTheme": "high-frequency-productivity",
+    "status": "success",
+    "createdAt": "2026-06-15T06:34:55.702Z"
   }
 ]
