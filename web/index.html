@@ -9,15 +9,27 @@
   <body>
     <main class="container">
       <header class="hero">
-        <h1>今日精选 Skill</h1>
-        <p>把每日推荐做成一个可浏览的展示站。</p>
-        <nav>
+        <span class="eyebrow">Daily Skill Digest</span>
+        <h1>把每天的推荐做成一份可逛、可信、可收藏的 skill 栏目</h1>
+        <p>基于 Claude Code 官方来源、推荐策略与主题编排，生成一份更像编辑精选的每日推荐。</p>
+        <nav class="tabs">
           <a href="./index.html">首页</a>
           <a href="./history.html">历史推荐</a>
           <a href="./skills.html">技能列表</a>
         </nav>
       </header>
-      <section id="today-card" class="card"></section>
+      <section class="hero-grid">
+        <article id="today-card" class="card card-featured"></article>
+        <aside class="card card-sidekick">
+          <h2>推荐规则</h2>
+          <ul class="feature-list">
+            <li>官方文档来源优先</li>
+            <li>周一到周五主题编排</li>
+            <li>学习路径与 related skills 跟进</li>
+            <li>结合近期官方更新信号</li>
+          </ul>
+        </aside>
+      </section>
     </main>
     <script type="module" src="./assets/app.js"></script>
   </body>
