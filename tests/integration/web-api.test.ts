@@ -14,8 +14,8 @@ afterEach(() => {
 });
 
 describe('WebApiService', () => {
-  it('returns today recommendation and skill list', async () => {
-    const dataDir = await mkdtemp(path.join(os.tmpdir(), 'daily-skill-pusher-web-'));
+  it('returns today recommendation and enriched skill list', async () => {
+    const dataDir = await mkdtemp(path.join(os.tmpdir(), 'daily-skill-pusher-web-api-'));
     await writeFile(path.join(dataDir, 'skills.json'), '[]');
     await writeFile(path.join(dataDir, 'push-history.json'), '[]');
 
@@ -58,5 +58,8 @@ describe('WebApiService', () => {
 
     expect(today.selectedSkill.name).toBe('run');
     expect(skills.some((skill) => skill.name === 'run')).toBe(true);
+    expect(skills[0]).toHaveProperty('difficulty');
+    expect(skills[0]).toHaveProperty('tags');
+    expect(skills[0]).toHaveProperty('isOfficialNoteworthy');
   });
 });

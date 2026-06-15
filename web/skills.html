@@ -18,7 +18,20 @@
           <a href="./skills.html">技能列表</a>
         </nav>
       </header>
+      <section class="filter-bar">
+        <label class="filter-field">
+          <span>搜索</span>
+          <input id="skills-search" type="search" placeholder="搜索技能名、描述…" />
+        </label>
+        <label class="filter-field">
+          <span>主题</span>
+          <select id="skills-theme-filter">
+            <option value="">全部主题</option>
+          </select>
+        </label>
+      </section>
       <section id="skills-list" class="list"></section>
+      <p id="skills-empty" class="empty-state" hidden>没有找到符合条件的技能。</p>
     </main>
     <script type="module" src="./assets/app.js"></script>
   </body>

@@ -21,6 +21,11 @@ export type SkillSummaryViewModel = {
   title: string;
   description: string;
   themes: string[];
+  tags: Skill['tags'];
+  category: Skill['category'];
+  difficulty: Skill['difficulty'];
+  isOfficialRecent: Skill['isOfficialRecent'];
+  isOfficialNoteworthy: Skill['isOfficialNoteworthy'];
   links: Skill['links'];
 };
 
@@ -47,6 +52,11 @@ export function buildSkillSummaries(skills: Skill[]): SkillSummaryViewModel[] {
       title: skill.title,
       description: skill.description,
       themes: skill.themes,
+      tags: skill.tags,
+      category: skill.category,
+      difficulty: skill.difficulty,
+      isOfficialRecent: skill.isOfficialRecent,
+      isOfficialNoteworthy: skill.isOfficialNoteworthy,
       links: skill.links,
     }))
     .sort((left, right) => left.title.localeCompare(right.title));

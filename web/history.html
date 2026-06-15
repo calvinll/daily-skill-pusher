@@ -18,7 +18,29 @@
           <a href="./skills.html">技能列表</a>
         </nav>
       </header>
+      <section class="filter-bar">
+        <label class="filter-field">
+          <span>搜索</span>
+          <input id="history-search" type="search" placeholder="搜索标题或内容…" />
+        </label>
+        <label class="filter-field">
+          <span>主题</span>
+          <select id="history-theme-filter">
+            <option value="">全部主题</option>
+          </select>
+        </label>
+        <label class="filter-field">
+          <span>状态</span>
+          <select id="history-status-filter">
+            <option value="">全部状态</option>
+            <option value="success">success</option>
+            <option value="failed">failed</option>
+            <option value="skipped">skipped</option>
+          </select>
+        </label>
+      </section>
       <section id="history-list" class="list"></section>
+      <p id="history-empty" class="empty-state" hidden>没有找到符合条件的历史推荐。</p>
     </main>
     <script type="module" src="./assets/app.js"></script>
   </body>

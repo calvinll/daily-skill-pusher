@@ -66,6 +66,7 @@ function renderToday(data) {
 
 function renderHistory(items) {
   const el = document.getElementById('history-list');
+  const empty = document.getElementById('history-empty');
   if (!el) return;
   el.innerHTML = items.map((item) => `
     <article class="card history-card">
@@ -82,24 +83,32 @@ function renderHistory(items) {
       <pre>${item.content}</pre>
     </article>
   `).join('');
+  if (empty) empty.hidden = items.length > 0;
 }
 
 function renderSkills(items) {
   const el = document.getElementById('skills-list');
+  const empty = document.getElementById('skills-empty');
   if (!el) return;
   el.innerHTML = items.map((item) => `
     <article class="card skill-card">
       <div class="card-header">
         <h2>${item.title}</h2>
-        <div class="badge-group">${item.themes.map((theme) => badge(theme)).join('')}</div>
+        <div class="badge-group">
+          ${item.themes.map((theme) => badge(theme)).join('')}
+          ${item.isOfficialRecent ? badge('官方近期') : ''}
+          ${item.isOfficialNoteworthy ? badge('官方值得关注') : ''}
+        </div>
       </div>
       <p class="lead">${item.description}</p>
+      <p class="meta">难度：${item.difficulty} · 分类：${item.category.join(' / ')}</p>
       <div class="link-stack">
         <p class="link-row"><a href="./skill.html?name=${encodeURIComponent(item.name)}">查看技能详情 →</a></p>
         <p class="link-row"><a href="${item.links[0]?.url ?? '#'}" target="_blank" rel="noreferrer">查看官方文档 →</a></p>
       </div>
     </article>
   `).join('');
+  if (empty) empty.hidden = items.length > 0;
 }
 
 async function fetchSkillDetail(name) {
@@ -168,14 +177,71 @@ function renderSkillDetail(skill) {
   `;
 }
 
+function populateThemeSelect(select, items, field = 'themes') {
+  if (!select) return;
+  const values = new Set();
+  items.forEach((item) => {
+    const raw = item[field];
+    if (Array.isArray(raw)) raw.forEach((value) => values.add(value));
+    else if (raw) values.add(raw);
+  });
+  select.innerHTML = `<option value="">全部主题</option>${Array.from(values).sort().map((value) => `<option value="${value}">${value}</option>`).join('')}`;
+}
+
+function bindSkillFilters(items) {
+  const search = document.getElementById('skills-search');
+  const theme = document.getElementById('skills-theme-filter');
+  populateThemeSelect(theme, items);
+
+  const rerender = () => {
+    const keyword = search?.value?.trim().toLowerCase() ?? '';
+    const themeValue = theme?.value ?? '';
+    const filtered = items.filter((item) => {
+      const matchesKeyword = !keyword || [item.name, item.title, item.description].join(' ').toLowerCase().includes(keyword);
+      const matchesTheme = !themeValue || item.themes.includes(themeValue);
+      return matchesKeyword && matchesTheme;
+    });
+    renderSkills(filtered);
+  };
+
+  search?.addEventListener('input', rerender);
+  theme?.addEventListener('change', rerender);
+  rerender();
+}
+
+function bindHistoryFilters(items) {
+  const search = document.getElementById('history-search');
+  const theme = document.getElementById('history-theme-filter');
+  const status = document.getElementById('history-status-filter');
+  populateThemeSelect(theme, items, 'selectedTheme');
+
+  const rerender = () => {
+    const keyword = search?.value?.trim().toLowerCase() ?? '';
+    const themeValue = theme?.value ?? '';
+    const statusValue = status?.value ?? '';
+    const filtered = items.filter((item) => {
+      const matchesKeyword = !keyword || [item.title, item.content].join(' ').toLowerCase().includes(keyword);
+      const matchesTheme = !themeValue || item.selectedTheme === themeValue;
+      const matchesStatus = !statusValue || item.status === statusValue;
+      return matchesKeyword && matchesTheme && matchesStatus;
+    });
+    renderHistory(filtered);
+  };
+
+  search?.addEventListener('input', rerender);
+  theme?.addEventListener('change', rerender);
+  status?.addEventListener('change', rerender);
+  rerender();
+}
+
 const path = window.location.pathname;
 const normalizedPath = BASE_PATH ? path.replace(BASE_PATH, '') || '/' : path;
 if (normalizedPath === '/' || normalizedPath.endsWith('/index.html')) {
   fetchJson(withBasePath('/api/today')).then(renderToday).catch(console.error);
 } else if (normalizedPath.endsWith('/history.html')) {
-  fetchJson(withBasePath('/api/history')).then(renderHistory).catch(console.error);
+  fetchJson(withBasePath('/api/history')).then(bindHistoryFilters).catch(console.error);
 } else if (normalizedPath.endsWith('/skills.html')) {
-  fetchJson(withBasePath('/api/skills')).then(renderSkills).catch(console.error);
+  fetchJson(withBasePath('/api/skills')).then(bindSkillFilters).catch(console.error);
 } else if (normalizedPath.endsWith('/skill.html')) {
   const name = new URLSearchParams(window.location.search).get('name');
   if (!name) {
