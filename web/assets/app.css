@@ -169,6 +169,33 @@ body {
   letter-spacing: 0.02em;
 }
 
+.badge-link {
+  text-decoration: none;
+}
+
+.badge-link:hover {
+  opacity: 0.85;
+}
+
+.badge.theme-badge {
+  background: rgba(75, 92, 255, 0.12);
+}
+
+.badge.status-success {
+  background: rgba(22, 163, 74, 0.12);
+  color: #15803d;
+}
+
+.badge.status-failed {
+  background: rgba(220, 38, 38, 0.12);
+  color: #b91c1c;
+}
+
+.badge.status-skipped {
+  background: rgba(120, 113, 108, 0.14);
+  color: #57534e;
+}
+
 .meta {
   color: var(--text-soft);
   font-size: 14px;
@@ -250,6 +277,10 @@ pre {
   margin-top: 16px;
   color: var(--text-soft);
   text-align: center;
+}
+
+.active-filters {
+  margin: 0 0 14px;
 }
 
 @media (max-width: 900px) {

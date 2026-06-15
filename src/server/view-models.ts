@@ -12,6 +12,7 @@ export type HistoryItemViewModel = {
   skillName: string;
   title: string;
   selectedTheme?: string;
+  displayTheme?: string;
   status: PushRecord['status'];
   content: string;
 };
@@ -39,6 +40,7 @@ export function buildHistoryItems(records: PushRecord[], skillMap: Map<string, S
         skillName: record.skillName,
         title: skill?.title ?? record.skillName,
         selectedTheme: record.selectedTheme,
+        displayTheme: record.selectedTheme ?? skill?.themes?.[0],
         status: record.status,
         content: record.content,
       };

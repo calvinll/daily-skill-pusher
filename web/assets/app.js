@@ -20,11 +20,21 @@ async function fetchJson(url) {
   return response.json();
 }
 
-function badge(label, href) {
+function badge(label, href, className = '') {
+  const classAttr = ['badge', className].filter(Boolean).join(' ');
   if (href) {
-    return `<a class="badge badge-link" href="${href}">${label}</a>`;
+    return `<a class="${classAttr} badge-link" href="${href}">${label}</a>`;
   }
-  return `<span class="badge">${label}</span>`;
+  return `<span class="${classAttr}">${label}</span>`;
+}
+
+function renderActiveFilters(el, chips) {
+  if (!el) return;
+  if (chips.length === 0) {
+    el.innerHTML = '';
+    return;
+  }
+  el.innerHTML = chips.map((chip) => badge(chip.label)).join('');
 }
 
 function renderToday(data) {
@@ -37,7 +47,7 @@ function renderToday(data) {
         <h2>${data.selectedSkill.title}</h2>
       </div>
       <div class="badge-group">
-        ${badge(data.selectedTheme ?? '未分配', `./skills.html?theme=${encodeURIComponent(data.selectedTheme ?? '')}`)}
+        ${badge(data.selectedTheme ?? '未分配', `./skills.html?theme=${encodeURIComponent(data.selectedTheme ?? '')}`, 'theme-badge')}
         ${data.selectedSkill.isOfficialNoteworthy ? badge('官方值得关注', './skills.html?official=noteworthy') : ''}
       </div>
     </div>
@@ -58,7 +68,7 @@ function renderToday(data) {
     </section>
     <section class="section-block">
       <h3>继续探索</h3>
-      <div class="badge-group">${data.selectedSkill.themes.map((theme) => badge(theme, `./skills.html?theme=${encodeURIComponent(theme)}`)).join('')}</div>
+      <div class="badge-group">${data.selectedSkill.themes.map((theme) => badge(theme, `./skills.html?theme=${encodeURIComponent(theme)}`, 'theme-badge')).join('')}</div>
       <div class="link-stack">
         <p class="link-row"><a href="./skill.html?name=${encodeURIComponent(data.selectedSkill.name)}">查看技能详情 →</a></p>
         <p class="link-row"><a href="${data.selectedSkill.links[0]?.url ?? '#'}" target="_blank" rel="noreferrer">查看官方文档 →</a></p>
@@ -80,15 +90,16 @@ function renderHistory(items) {
           <p class="meta">${item.date}</p>
         </div>
         <div class="badge-group">
-          ${badge(item.selectedTheme ?? '未分配', item.selectedTheme ? `./history.html?theme=${encodeURIComponent(item.selectedTheme)}` : '')}
-          ${badge(item.status, `./history.html?status=${encodeURIComponent(item.status)}`)}
+          ${badge(item.displayTheme ?? '未分配', item.displayTheme ? `./history.html?theme=${encodeURIComponent(item.displayTheme)}` : '', 'theme-badge')}
+          ${badge(item.status, `./history.html?status=${encodeURIComponent(item.status)}`, `status-${item.status}`)}
         </div>
       </div>
+      <p class="meta">本次推送主题：${item.displayTheme ?? '未分配'}</p>
       <pre>${item.content}</pre>
     </article>
   `).join('');
   if (empty) empty.hidden = items.length > 0;
-  if (count) count.textContent = `共 ${items.length} 条结果`;
+  if (count) count.textContent = `筛选后 ${items.length} 条结果`;
 }
 
 function renderSkills(items) {
@@ -101,7 +112,7 @@ function renderSkills(items) {
       <div class="card-header">
         <h2>${item.title}</h2>
         <div class="badge-group">
-          ${item.themes.map((theme) => badge(theme, `./skills.html?theme=${encodeURIComponent(theme)}`)).join('')}
+          ${item.themes.map((theme) => badge(theme, `./skills.html?theme=${encodeURIComponent(theme)}`, 'theme-badge')).join('')}
           ${item.isOfficialRecent ? badge('官方近期', './skills.html?official=recent') : ''}
           ${item.isOfficialNoteworthy ? badge('官方值得关注', './skills.html?official=noteworthy') : ''}
         </div>
@@ -119,7 +130,7 @@ function renderSkills(items) {
     </article>
   `).join('');
   if (empty) empty.hidden = items.length > 0;
-  if (count) count.textContent = `共 ${items.length} 个技能`;
+  if (count) count.textContent = `筛选后 ${items.length} 个技能`;
 }
 
 async function fetchSkillDetail(name) {
@@ -147,7 +158,7 @@ function renderSkillDetail(skill) {
         <h2>${skill.title}</h2>
       </div>
       <div class="badge-group">
-        ${skill.themes.map((theme) => badge(theme, `./skills.html?theme=${encodeURIComponent(theme)}`)).join('')}
+        ${skill.themes.map((theme) => badge(theme, `./skills.html?theme=${encodeURIComponent(theme)}`, 'theme-badge')).join('')}
         ${skill.isOfficialRecent ? badge('官方近期', './skills.html?official=recent') : ''}
         ${skill.isOfficialNoteworthy ? badge('官方值得关注', './skills.html?official=noteworthy') : ''}
       </div>
@@ -180,7 +191,7 @@ function renderSkillDetail(skill) {
     <section class="section-block split-grid">
       <div>
         <h3>相关技能</h3>
-        <div class="badge-group">${(skill.relatedSkills ?? []).map((item) => badge(item, `./skill.html?name=${encodeURIComponent(item)}`)).join('') || '<span class="meta">暂无</span>'}</div>
+        <div class="badge-group">${(skill.relatedSkills ?? []).map((item) => badge(item, `./skill.html?name=${encodeURIComponent(item)}`, 'theme-badge')).join('') || '<span class="meta">暂无</span>'}</div>
       </div>
       <div>
         <h3>使用入口</h3>
@@ -190,7 +201,7 @@ function renderSkillDetail(skill) {
   `;
 }
 
-function populateSelect(select, items, extractor) {
+function populateSelect(select, items, extractor, placeholder = '全部') {
   if (!select) return;
   const values = new Set();
   items.forEach((item) => {
@@ -199,7 +210,7 @@ function populateSelect(select, items, extractor) {
     else if (raw) values.add(raw);
   });
   const current = select.value;
-  select.innerHTML = `<option value="">全部</option>${Array.from(values).sort().map((value) => `<option value="${value}">${value}</option>`).join('')}`;
+  select.innerHTML = `<option value="">${placeholder}</option>${Array.from(values).sort().map((value) => `<option value="${value}">${value}</option>`).join('')}`;
   select.value = current;
 }
 
@@ -208,9 +219,10 @@ function bindSkillFilters(items) {
   const search = document.getElementById('skills-search');
   const theme = document.getElementById('skills-theme-filter');
   const difficulty = document.getElementById('skills-difficulty-filter');
+  const active = document.getElementById('skills-active-filters');
 
-  populateSelect(theme, items, (item) => item.themes);
-  populateSelect(difficulty, items, (item) => item.difficulty);
+  populateSelect(theme, items, (item) => item.themes, '全部主题');
+  populateSelect(difficulty, items, (item) => item.difficulty, '全部难度');
 
   if (search && params.get('q')) search.value = params.get('q');
   if (theme && params.get('theme')) theme.value = params.get('theme');
@@ -232,6 +244,13 @@ function bindSkillFilters(items) {
       return matchesKeyword && matchesTheme && matchesDifficulty && matchesTag && matchesOfficial;
     });
 
+    const chips = [];
+    if (keyword) chips.push({ label: `搜索: ${keyword}` });
+    if (themeValue) chips.push({ label: `主题: ${themeValue}` });
+    if (difficultyValue) chips.push({ label: `难度: ${difficultyValue}` });
+    if (tagValue) chips.push({ label: `标签: ${tagValue}` });
+    if (officialValue) chips.push({ label: officialValue === 'recent' ? '官方近期' : '官方值得关注' });
+    renderActiveFilters(active, chips);
     renderSkills(filtered);
   };
 
@@ -246,8 +265,9 @@ function bindHistoryFilters(items) {
   const search = document.getElementById('history-search');
   const theme = document.getElementById('history-theme-filter');
   const status = document.getElementById('history-status-filter');
+  const active = document.getElementById('history-active-filters');
 
-  populateSelect(theme, items, (item) => item.selectedTheme);
+  populateSelect(theme, items, (item) => item.displayTheme, '全部主题');
 
   if (search && params.get('q')) search.value = params.get('q');
   if (theme && params.get('theme')) theme.value = params.get('theme');
@@ -259,10 +279,16 @@ function bindHistoryFilters(items) {
     const statusValue = status?.value ?? '';
     const filtered = items.filter((item) => {
       const matchesKeyword = !keyword || [item.title, item.content].join(' ').toLowerCase().includes(keyword);
-      const matchesTheme = !themeValue || item.selectedTheme === themeValue;
+      const matchesTheme = !themeValue || item.displayTheme === themeValue;
       const matchesStatus = !statusValue || item.status === statusValue;
       return matchesKeyword && matchesTheme && matchesStatus;
     });
+
+    const chips = [];
+    if (keyword) chips.push({ label: `搜索: ${keyword}` });
+    if (themeValue) chips.push({ label: `主题: ${themeValue}` });
+    if (statusValue) chips.push({ label: `状态: ${statusValue}` });
+    renderActiveFilters(active, chips);
     renderHistory(filtered);
   };
 
