@@ -5,12 +5,18 @@ env:
 
 on:
   schedule:
-    # 09:05 Asia/Shanghai = 01:05 UTC
+    # Primary 09:05 Asia/Shanghai = 01:05 UTC
     - cron: '5 1 * * *'
+    # Backup 10:05 Asia/Shanghai = 02:05 UTC
+    - cron: '5 2 * * *'
   workflow_dispatch:
 
 permissions:
   contents: write
+
+concurrency:
+  group: daily-skill-push
+  cancel-in-progress: false
 
 jobs:
   daily-push:
