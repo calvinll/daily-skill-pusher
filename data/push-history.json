@@ -92,5 +92,15 @@
     "selectedTheme": "team-collaboration",
     "status": "success",
     "createdAt": "2026-06-18T06:06:50.023Z"
+  },
+  {
+    "id": "push_1781850505528_92ef7bba",
+    "date": "2026-06-19",
+    "skillName": "code-review",
+    "channel": "feishu",
+    "content": "🧠 今日精选 Skill：代码审查助手\n\n适合场景：\n- 提交代码前快速自查\n- 定位改动中的明显 bug\n- 寻找可以简化的实现\n\n推荐用法：\n/code-review high\n\n为什么推荐：\n高频、通用、见效快，适合养成提交前自检习惯。\n\n使用入口：\n- Claude Code官方文档: https://code.claude.com/docs/en/commands.md\n- 项目补充说明: https://github.com/calvinll/daily-skill-pusher/blob/main/docs/skills/code-review.md\n\n关联技能：\nsimplify / verify",
+    "selectedTheme": "learning-path",
+    "status": "success",
+    "createdAt": "2026-06-19T06:28:22.837Z"
   }
 ]
