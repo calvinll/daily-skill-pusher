@@ -102,5 +102,15 @@
     "selectedTheme": "learning-path",
     "status": "success",
     "createdAt": "2026-06-19T06:28:22.837Z"
+  },
+  {
+    "id": "push_1781933071769_5091b68b",
+    "date": "2026-06-20",
+    "skillName": "verify",
+    "channel": "feishu",
+    "content": "🧠 今日精选 Skill：效果验证助手\n\n适合场景：\n- 改完功能后做一次手动验证\n- 提交前确认 bug 已修复\n- 需要验证 PR 的真实效果\n\n推荐用法：\n/verify\n\n为什么推荐：\n适合和 review、test 搭配，防止“代码改了但没生效”。\n\n使用入口：\n- Claude Code官方文档: https://code.claude.com/docs/en/commands.md\n- 项目补充说明: https://github.com/calvinll/daily-skill-pusher/blob/main/docs/skills/verify.md\n\n关联技能：\ncode-review / run",
+    "selectedTheme": "high-frequency-productivity",
+    "status": "success",
+    "createdAt": "2026-06-20T05:24:29.879Z"
   }
 ]
