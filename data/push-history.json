@@ -152,5 +152,15 @@
     "selectedTheme": "official-high-value",
     "status": "success",
     "createdAt": "2026-06-24T05:09:02.448Z"
+  },
+  {
+    "id": "push_1782364408260_38f09a25",
+    "date": "2026-06-25",
+    "skillName": "fewer-permission-prompts",
+    "channel": "feishu",
+    "content": "🧠 今日精选 Skill：/fewer-permission-prompts\n\n适合场景：\n- 频繁被只读命令权限弹窗打断\n- 想给团队项目补一版更顺手的 Claude 权限配置\n\n推荐用法：\n/fewer-permission-prompts\n\n为什么推荐：\n如果你已经知道常用读操作都很安全，这个 skill 能明显减少权限确认带来的中断。\n\n使用入口：\n- Claude Code官方文档: https://code.claude.com/docs/en/commands.md\n\n关联技能：\nreload-skills / claude-api",
+    "selectedTheme": "team-collaboration",
+    "status": "success",
+    "createdAt": "2026-06-25T05:13:26.325Z"
   }
 ]
