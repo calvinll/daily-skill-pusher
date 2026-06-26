@@ -162,5 +162,15 @@
     "selectedTheme": "team-collaboration",
     "status": "success",
     "createdAt": "2026-06-25T05:13:26.325Z"
+  },
+  {
+    "id": "push_1782451148266_0f759494",
+    "date": "2026-06-26",
+    "skillName": "simplify",
+    "channel": "feishu",
+    "content": "🧠 今日精选 Skill：/simplify\n\n适合场景：\n- 改完代码后想顺手清理冗余实现\n- 希望把改动整理得更简洁、更顺手维护\n\n推荐用法：\n/simplify\n\n为什么推荐：\n它不强调找 bug，而是专注于让代码更干净、更顺手，是提交前很好用的一步。\n\n使用入口：\n- Claude Code官方文档: https://code.claude.com/docs/en/commands.md\n\n关联技能：\ncode-review / verify",
+    "selectedTheme": "learning-path",
+    "status": "success",
+    "createdAt": "2026-06-26T05:19:03.668Z"
   }
 ]
