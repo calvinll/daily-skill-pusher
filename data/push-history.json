@@ -182,5 +182,15 @@
     "selectedTheme": "high-frequency-productivity",
     "status": "success",
     "createdAt": "2026-06-27T05:01:20.924Z"
+  },
+  {
+    "id": "push_1782625322437_bc0d52ba",
+    "date": "2026-06-28",
+    "skillName": "debug",
+    "channel": "feishu",
+    "content": "🧠 今日精选 Skill：/debug\n\n适合场景：\n- Claude Code 自己行为异常，想快速排查原因\n- 需要读取调试日志来定位 CLI 或工具调用问题\n\n推荐用法：\n/debug\n\n为什么推荐：\n当问题不在业务代码而在 Claude Code 本身时，这类诊断 skill 很有价值。\n\n使用入口：\n- Claude Code官方文档: https://code.claude.com/docs/en/commands.md\n\n关联技能：\ncode-review",
+    "selectedTheme": "official-high-value",
+    "status": "success",
+    "createdAt": "2026-06-28T05:41:59.337Z"
   }
 ]
