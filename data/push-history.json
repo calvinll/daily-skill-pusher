@@ -212,5 +212,15 @@
     "selectedTheme": "setup-workflow",
     "status": "success",
     "createdAt": "2026-06-30T05:15:04.046Z"
+  },
+  {
+    "id": "push_1782885016118_0d87c4f4",
+    "date": "2026-07-01",
+    "skillName": "claude-api",
+    "channel": "feishu",
+    "content": "🧠 今日精选 Skill：/claude-api\n\n适合场景：\n- 想快速确认 Claude API 或 SDK 的正确用法\n- 写接入代码时想减少拍脑袋试错\n\n推荐用法：\n/claude-api\n\n为什么推荐：\n当你要查 Claude API、SDK、流式输出或工具调用时，这类官方参考 skill 非常省时间。\n\n使用入口：\n- Claude Code官方文档: https://code.claude.com/docs/en/commands.md\n\n关联技能：\n暂无",
+    "selectedTheme": "official-high-value",
+    "status": "success",
+    "createdAt": "2026-07-01T05:50:12.903Z"
   }
 ]
