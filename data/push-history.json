@@ -282,5 +282,15 @@
     "selectedTheme": "setup-workflow",
     "status": "success",
     "createdAt": "2026-07-07T05:02:41.785Z"
+  },
+  {
+    "id": "push_1783484745831_f9c1c874",
+    "date": "2026-07-08",
+    "skillName": "reload-skills",
+    "channel": "feishu",
+    "content": "🧠 今日精选 Skill：/reload-skills\n\n适合场景：\n- 刚新增或修改了本地 skill，不想重启 Claude Code 会话\n- 团队在试装自定义 skills，希望马上验证是否生效\n\n推荐用法：\n/reload-skills\n\n为什么推荐：\n它能让 skill 的安装、调试和分发流程顺畅很多，特别适合正在推广自定义 skill 的团队。\n\n使用入口：\n- Claude Code官方文档: https://code.claude.com/docs/en/commands.md\n\n关联技能：\nloop / claude-api",
+    "selectedTheme": "official-high-value",
+    "status": "success",
+    "createdAt": "2026-07-08T04:25:42.675Z"
   }
 ]
