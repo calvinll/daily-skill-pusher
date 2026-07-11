@@ -312,5 +312,15 @@
     "selectedTheme": "learning-path",
     "status": "success",
     "createdAt": "2026-07-10T05:02:46.132Z"
+  },
+  {
+    "id": "push_1783743706889_ef9accc8",
+    "date": "2026-07-11",
+    "skillName": "batch",
+    "channel": "feishu",
+    "content": "🧠 今日精选 Skill：/batch\n\n适合场景：\n- 想把一个大改动拆成多个独立小任务并行推进\n- 需要跨代码库多处修改，单线程做太慢\n\n推荐用法：\n/batch 把整个项目里的旧接口调用迁移到新 SDK\n\n为什么推荐：\n适合大范围改动和并行处理任务，能把原本需要人工拆分的工作交给 Claude 执行。\n\n使用入口：\n- Claude Code官方文档: https://code.claude.com/docs/en/commands.md\n\n关联技能：\ncode-review / loop",
+    "selectedTheme": "team-collaboration",
+    "status": "success",
+    "createdAt": "2026-07-11T04:21:42.752Z"
   }
 ]
