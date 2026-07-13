@@ -332,5 +332,15 @@
     "selectedTheme": "high-frequency-productivity",
     "status": "success",
     "createdAt": "2026-07-12T04:32:14.337Z"
+  },
+  {
+    "id": "push_1783917501898_6bd0962f",
+    "date": "2026-07-13",
+    "skillName": "run",
+    "channel": "feishu",
+    "content": "🧠 今日精选 Skill：/run\n\n适合场景：\n- 想把项目直接跑起来看实际效果\n- 不想只靠看代码或测试判断改动是否生效\n\n推荐用法：\n/run\n\n为什么推荐：\n适合把“写完代码”推进到“真实跑起来看结果”这一步。\n\n使用入口：\n- Claude Code官方文档: https://code.claude.com/docs/en/commands.md\n\n关联技能：\nverify",
+    "selectedTheme": "high-frequency-productivity",
+    "status": "success",
+    "createdAt": "2026-07-13T04:38:19.742Z"
   }
 ]
