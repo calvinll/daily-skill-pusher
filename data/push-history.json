@@ -342,5 +342,15 @@
     "selectedTheme": "high-frequency-productivity",
     "status": "success",
     "createdAt": "2026-07-13T04:38:19.742Z"
+  },
+  {
+    "id": "push_1784002338915_35f85890",
+    "date": "2026-07-14",
+    "skillName": "run-skill-generator",
+    "channel": "feishu",
+    "content": "🧠 今日精选 Skill：/run-skill-generator\n\n适合场景：\n- 项目启动方式比较复杂，想让 /run 和 /verify 更稳定\n- 希望把项目运行方法沉淀成可复用 skill\n\n推荐用法：\n/run-skill-generator\n\n为什么推荐：\n它适合把项目运行流程沉淀成标准 skill，后面再用 /run 和 /verify 会稳定很多。\n\n使用入口：\n- Claude Code官方文档: https://code.claude.com/docs/en/commands.md\n\n关联技能：\nrun / verify",
+    "selectedTheme": "setup-workflow",
+    "status": "success",
+    "createdAt": "2026-07-14T04:12:16.536Z"
   }
 ]
