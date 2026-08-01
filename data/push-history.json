@@ -522,5 +522,15 @@
     "selectedTheme": "learning-path",
     "status": "success",
     "createdAt": "2026-07-31T04:32:22.999Z"
+  },
+  {
+    "id": "push_1785558532471_b53070a5",
+    "date": "2026-08-01",
+    "skillName": "dataviz",
+    "channel": "feishu",
+    "content": "🧠 今日精选 Skill：/dataviz\n\n适合场景：\n- 想快速理解官方 skill /dataviz 适合解决什么问题\n- 准备试用 /dataviz，希望先拿到一个明确使用场景\n\n推荐用法：\n/dataviz\n\n为什么推荐：\n来自 Claude Code 官方文档的内置 skill。/dataviz 适合先作为官方能力了解和试用入口，再决定是否纳入日常工作流。\n\n使用入口：\n- Claude Code官方文档: https://code.claude.com/docs/en/commands.md\n\n关联技能：\n暂无",
+    "selectedTheme": "official-high-value",
+    "status": "success",
+    "createdAt": "2026-08-01T04:28:49.083Z"
   }
 ]
