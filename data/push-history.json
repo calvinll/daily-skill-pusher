@@ -1442,5 +1442,15 @@
     "selectedTheme": "high-frequency-productivity",
     "status": "success",
     "createdAt": "2026-10-31T06:54:48.794Z"
+  },
+  {
+    "id": "push_1793517914926_f6294182",
+    "date": "2026-11-01",
+    "skillName": "design",
+    "channel": "feishu",
+    "content": "🧠 今日精选 Skill：/design\n\n适合场景：\n- 想快速理解官方 skill /design 适合解决什么问题\n- 准备试用 /design，希望先拿到一个明确使用场景\n\n推荐用法：\n/design\n\n为什么推荐：\n来自 Claude Code 官方文档的内置 skill。/design 适合先作为官方能力了解和试用入口，再决定是否纳入日常工作流。\n\n使用入口：\n- Claude Code官方文档: https://code.claude.com/docs/en/commands.md\n\n关联技能：\n暂无",
+    "selectedTheme": "official-high-value",
+    "status": "success",
+    "createdAt": "2026-11-01T07:25:12.237Z"
   }
 ]
